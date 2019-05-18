@@ -11,17 +11,14 @@ import UIKit
 class RecipeTableViewController: UITableViewController {
 
     let interactor = Interactor()
-    let customColors = CustomColors()
     var recipes: [Recipe] = []
-    let childMenuTableViewController = ChildMenuTableViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         loadRecipes()
-        self.tableView.separatorStyle = .none
-        self.tableView.rowHeight = 200
-        self.navigationItem.leftBarButtonItem?.tintColor = customColors.customPink
+        setupView()
+
     }
 
 
@@ -40,9 +37,18 @@ class RecipeTableViewController: UITableViewController {
         let recipe = recipes[indexPath.section]
         cell.recipeLabel.text = recipe.name
         cell.recipeImage.image = recipe.image
-        cell.setupCell()
 
         return cell
+    }
+    
+    func setupView() {
+        let customColors = CustomColors()
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 200
+        navigationItem.leftBarButtonItem?.tintColor = customColors.customPink
+        let logoImage = UIImage(named: "RecipeGroupsSize26")
+        let logoImageView = UIImageView(image: logoImage)
+        navigationItem.titleView = logoImageView
     }
     
     func loadRecipes() {
@@ -74,13 +80,23 @@ class RecipeTableViewController: UITableViewController {
 
 extension RecipeTableViewController: SideMenuDelegate {
     func userTapped(menuButton: String) {
-        if menuButton == "logout" {
-            UserController.shared.logoutUser {
-                print("Recipe VC delegate")
-                print(menuButton)
-                self.performSegue(withIdentifier: "signOutFromRecipeTableView", sender: nil)
+        switch menuButton {
+        case "Logout":
+            if UserController.shared.user?.name == "Ryan" {
+                self.performSegue(withIdentifier: "SignOutFromRecipeTableView", sender: nil)
             }
+            
+            UserController.shared.logoutUser {
+                self.performSegue(withIdentifier: "SignOutFromRecipeTableView", sender: nil)
+            }
+        case "My Groups":
+            self.performSegue(withIdentifier: "SegueFromRecipesToMyGroups", sender: nil)
+        case "My Recipes":
+            self.performSegue(withIdentifier: "SegueFromRecipesToMyRecipes", sender: nil)
+        default:
+            break
         }
+        
     }
 }
 

@@ -9,82 +9,104 @@
 import UIKit
 
 class MyGroupsTableViewController: UITableViewController {
-
+    
+    let interactor = Interactor()
+    let childMenuTableViewController = ChildMenuTableViewController()
+    var groups: [Group] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        loadGroups()
+        setupView()
     }
 
-    // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+
+        return groups.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+
+        return 1
     }
 
-    /*
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MyGroupsCell", for: indexPath) as! MyGroupsTableViewCell
+        
+        let group = groups[indexPath.row]
+        cell.setupCell()
+        cell.groupLabel.text = group.name
 
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        cell.contentView.layer.masksToBounds = true
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    func setupView() {
+        let customColors = CustomColors()
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 100
+        navigationItem.leftBarButtonItem?.tintColor = customColors.customPink
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    func loadGroups() {
+        // if ...
+        
+        groups = Group.loadSampleGroups()
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    @IBAction func menuButtonTapped(_ sender: UIBarButtonItem) {
+        performSegue(withIdentifier: "openMenuFromMyGroups", sender: nil)
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if let destinationViewController = segue.destination as? MenuViewController {
+            destinationViewController.transitioningDelegate = self
+            destinationViewController.interactor = interactor
+            destinationViewController.currentViewController = self
+            destinationViewController.delegate = self
+        }
     }
-    */
+}
 
+extension MyGroupsTableViewController: SideMenuDelegate {
+    func userTapped(menuButton: String) {
+
+        switch menuButton {
+        case "Logout":
+            if UserController.shared.user?.name == "Ryan" {
+                self.performSegue(withIdentifier: "SignOutFromMyGroups", sender: nil)
+            }
+            
+            UserController.shared.logoutUser {
+                self.performSegue(withIdentifier: "signOutFromMyGroups", sender: nil)
+            }
+        case "Recipes":
+            performSegue(withIdentifier: "SegueFromMyGroupsToRecipes", sender: nil)
+        case "My Recipes":
+            performSegue(withIdentifier: "SegueFromMyGroupsToMyRecipes", sender: nil)
+        default:
+            break
+        }
+    }
+}
+
+extension MyGroupsTableViewController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return PresentMenuAnimator()
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return DismissMenuAnimator()
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return interactor.hasStarted ? interactor : nil
+    }
 }

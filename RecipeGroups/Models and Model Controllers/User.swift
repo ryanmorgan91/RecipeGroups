@@ -7,3 +7,18 @@
 //
 
 import Foundation
+
+class User {
+    
+    var name: String
+    var email: String
+    var recipes: [Recipe]
+    var groups: [Group]
+    
+    init(name: String, email: String, recipes: [Recipe], groups: [Group]) {
+        self.name = name
+        self.email = email
+        self.recipes = recipes
+        self.groups = groups
+    }
+}

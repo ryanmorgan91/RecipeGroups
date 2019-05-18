@@ -11,10 +11,13 @@ import UIKit
 class IngredientsTableViewCell: UITableViewCell {
 
     @IBOutlet weak var ingredientLabel: UILabel!
+    @IBOutlet weak var ingredientBullet: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+        let customColors = CustomColors()
+        ingredientBullet.tintColor = customColors.customBlue
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

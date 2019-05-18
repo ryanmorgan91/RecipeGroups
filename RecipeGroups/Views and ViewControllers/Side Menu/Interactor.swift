@@ -6,4 +6,9 @@
 //  Copyright © 2019 Ryan MORGAN. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+class Interactor: UIPercentDrivenInteractiveTransition {
+    var hasStarted = false
+    var shouldFinish = false
+}

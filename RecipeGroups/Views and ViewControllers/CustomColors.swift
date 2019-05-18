@@ -12,4 +12,5 @@ import UIKit
 class CustomColors {
     let customPink = UIColor(red: 237/255, green: 107/255, blue: 156/255, alpha: 1.0)
     let customGray = UIColor(red: 224/255, green: 220/255, blue: 220/255, alpha: 1.0)
+    let customBlue = UIColor(red: 113/255, green: 195/255, blue: 245/255, alpha: 1.0)
 }

@@ -10,6 +10,11 @@ import UIKit
 
 class MyRecipesTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var shadowLayer: ShadowCellView!
+    @IBOutlet weak var mainBackground: CellBackgroundView!
+    @IBOutlet weak var recipeImage: UIImageView!
+    @IBOutlet weak var recipeLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

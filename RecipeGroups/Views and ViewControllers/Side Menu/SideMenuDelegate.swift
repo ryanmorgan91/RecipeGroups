@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+protocol SideMenuDelegate: AnyObject {
+    func userTapped(menuButton: String)
+}

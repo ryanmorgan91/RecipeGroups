@@ -14,7 +14,7 @@ class ChildIngredientsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupView()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -42,6 +42,13 @@ class ChildIngredientsTableViewController: UITableViewController {
         cell.ingredientLabel.text = tempIngredients[indexPath.row]
         
         return cell
+    }
+    
+    func setupView() {
+        tableView.separatorInset = .zero
+        tableView.separatorStyle = .none
+        tableView.estimatedRowHeight = 44
+        tableView.rowHeight = UITableView.automaticDimension
     }
     
 

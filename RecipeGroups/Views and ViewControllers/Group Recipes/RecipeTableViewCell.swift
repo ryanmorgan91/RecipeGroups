@@ -14,12 +14,6 @@ class RecipeTableViewCell: UITableViewCell {
     @IBOutlet weak var recipeLabel: UILabel!
     @IBOutlet weak var shadowLayer: UIView!
     @IBOutlet weak var mainBackground: UIView!
-    
-    func setupCell() {
-        self.mainBackground.layer.cornerRadius = 8
-        self.mainBackground.layer.masksToBounds = true
-        
-    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
