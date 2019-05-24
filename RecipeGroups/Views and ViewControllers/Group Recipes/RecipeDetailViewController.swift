@@ -30,8 +30,16 @@ class RecipeDetailViewController: UIViewController {
     @IBOutlet weak var switchBaseImage: UIImageView!
     @IBOutlet weak var switchActiveImage: UIImageView!
     @IBOutlet weak var switchActiveTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var recipeImage: UIImageView!
+    @IBOutlet weak var recipeTitleLabel: UILabel!
+    @IBOutlet weak var recipeCookTimeLabel: UILabel!
+    @IBOutlet weak var difficultyLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    
     
     let customColors = CustomColors()
+    
+    var recipe: Recipe?
     
     var showSteps: Bool = true
     
@@ -40,7 +48,7 @@ class RecipeDetailViewController: UIViewController {
         
         setupCustomSwitch()
         addChildView(withChild: childSteps)
-        
+        setupView()
     }
     
     func setupCustomSwitch() {
@@ -49,17 +57,6 @@ class RecipeDetailViewController: UIViewController {
         switchActiveImage.layer.cornerRadius = 25
         switchActiveImage.tintColor = customColors.customPink
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
     
     @IBAction func ingredientsButtonTapped(_ sender: UIButton) {
         animateSwitch()
@@ -100,12 +97,15 @@ class RecipeDetailViewController: UIViewController {
     }
     
     func updateView() {
+        guard let recipe = recipe else { return }
         if showSteps {
             removeChildView(childViewController: childIngredients)
             addChildView(withChild: childSteps)
+            childSteps.steps = recipe.steps
         } else {
             removeChildView(childViewController: childSteps)
             addChildView(withChild: childIngredients)
+            childIngredients.ingredients = recipe.ingredients
         }
     }
     
@@ -115,5 +115,27 @@ class RecipeDetailViewController: UIViewController {
         child.removeFromParent()
     }
     
-   
+    func setupView() {
+        guard let recipe = recipe else { return }
+        
+//        setupImage(with: recipe)
+        
+        /* Comment the below to get rid of samples */
+        recipeImage.image = recipe.image
+        
+        recipeTitleLabel.text = recipe.name
+        recipeCookTimeLabel.text = recipe.cookTime.rawValue
+        difficultyLabel.text = recipe.cookingDifficulty.rawValue
+        descriptionLabel.text = recipe.description
+    }
+    
+    func setupImage(with recipe: Recipe) {
+        
+        RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
+            guard let image = image else { return }
+            DispatchQueue.main.async {
+                self.recipeImage.image = image
+            }
+        }
+    }
 }

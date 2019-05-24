@@ -16,8 +16,10 @@ class MyRecipesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadRecipes()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: RecipeController.recipeDataUpdatedNotification, object: nil)
+        
         setupView()
+        updateUI()
         
     }
     
@@ -33,6 +35,9 @@ class MyRecipesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as! MyRecipesTableViewCell
+//        configure(cell, forItemAt: indexPath)
+        
+        /* comment the following to remove sample images */
         
         let recipe = recipes[indexPath.section]
         cell.recipeLabel.text = recipe.name
@@ -46,15 +51,28 @@ class MyRecipesTableViewController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.rowHeight = 200
         navigationItem.leftBarButtonItem?.tintColor = customColors.customPink
-
     }
     
-    func loadRecipes() {
-        //        if let savedRecipes = Recipe.loadRecipes() {
-        //            recipes = savedRecipes
-        //        } else {
-        recipes = Recipe.loadSampleRecipes()
-        //        }
+    @objc func updateUI() {
+        print("update UI test")
+        self.recipes = RecipeController.shared.recipes.filter({ $0.author == UserController.shared.user!.email })
+        self.tableView.reloadData()
+    }
+    
+    func configure(_ cell: MyRecipesTableViewCell, forItemAt indexPath: IndexPath) {
+        let recipe = recipes[indexPath.section]
+        cell.recipeLabel.text = recipe.name
+        RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
+            guard let image = image else { return }
+            DispatchQueue.main.async {
+                if let currentIndexPath = self.tableView.indexPath(for: cell),
+                    currentIndexPath != indexPath {
+                    return
+                }
+                cell.recipeImage.image = image
+                cell.setNeedsLayout()
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

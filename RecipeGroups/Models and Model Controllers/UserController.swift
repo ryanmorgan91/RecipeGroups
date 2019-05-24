@@ -18,10 +18,24 @@ class UserController {
     
     let baseURL = URL(string: "http://127.0.0.1:5000/")!
     
-    func backdoor() {
-        
-        self.user = User(name: "Ryan", email: "ryan@secret.com", recipes: Recipe.loadSampleRecipes(), groups: [])
+    func updateUser(name: String, email: String) {
+        self.user = User(name: name, email: email)
         self.successfulLogin = true
+        
+        /* To turn off networking, commenting the following and uncomment the rows below */
+//        RecipeController.shared.fetchRecipes()
+//        GroupController.shared.fetchGroups()
+        
+        RecipeController.shared.recipes = Recipe.loadSampleRecipes()
+        RecipeController.shared.process(recipes: RecipeController.shared.recipes)
+        GroupController.shared.groups = Group.loadSampleGroups()
+        
+//        let recipes = Recipe.loadSampleRecipes()
+//        for recipe in recipes {
+//            RecipeController.shared.sendRecipe(recipe: recipe) {
+//                //
+//            }
+//        }
     }
     
     func loginUser(email: String, password: String, completionHandler: @escaping () -> ()) {
@@ -41,12 +55,13 @@ class UserController {
         // To DO: Handle already logged in users
         
         // Temporary backdoor
-        if email == "ryan@secret.com" && password == "backdoor" {
-            backdoor()
+        if email == "johnsmith@example.com" && password == "backdoor" {
+            updateUser(name: "John", email: "johnsmith@example.com")
             DispatchQueue.main.async {
                 completionHandler()
+                return
             }
-            return
+            
         }
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -57,11 +72,8 @@ class UserController {
                     print(result)
                     if let name = result["Name"],
                         let email = result["Email"] {
-                        self.user = User(name: name, email: email, recipes: [], groups: [])
+                        self.updateUser(name: name, email: email)
                     }
-                    self.successfulLogin = true
-                } else {
-                    self.successfulLogin = false
                 }
                 DispatchQueue.main.async {
                     completionHandler()

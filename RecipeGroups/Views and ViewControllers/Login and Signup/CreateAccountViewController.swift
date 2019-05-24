@@ -57,7 +57,7 @@ class CreateAccountViewController: UIViewController {
         
         UserController.shared.registerUser(name: name, email: email, password: password) { (result) in
             if result == "Success" {
-                UserController.shared.user = User(name: name, email: email, recipes: [], groups: [])
+                UserController.shared.user = User(name: name, email: email)
                 
                 self.performSegue(withIdentifier: "newAccountSegue", sender: nil)
             } else {

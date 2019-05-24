@@ -16,9 +16,10 @@ class RecipeTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadRecipes()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: RecipeController.recipeDataUpdatedNotification, object: nil)
+        
         setupView()
-
+        updateUI()
     }
 
 
@@ -33,11 +34,14 @@ class RecipeTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as! RecipeTableViewCell
+//        configure(cell, forItemAt: indexPath)
+        
+        /* comment the following to remove sample images */
         
         let recipe = recipes[indexPath.section]
         cell.recipeLabel.text = recipe.name
         cell.recipeImage.image = recipe.image
-
+        
         return cell
     }
     
@@ -51,12 +55,25 @@ class RecipeTableViewController: UITableViewController {
         navigationItem.titleView = logoImageView
     }
     
-    func loadRecipes() {
-//        if let savedRecipes = Recipe.loadRecipes() {
-//            recipes = savedRecipes
-//        } else {
-            recipes = Recipe.loadSampleRecipes()
-//        }
+    @objc func updateUI() {
+        self.recipes = RecipeController.shared.recipes
+        self.tableView.reloadData()
+    }
+    
+    func configure(_ cell: RecipeTableViewCell, forItemAt indexPath: IndexPath) {
+        let recipe = recipes[indexPath.section]
+        cell.recipeLabel.text = recipe.name
+        RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
+            guard let image = image else { return }
+            DispatchQueue.main.async {
+                if let currentIndexPath = self.tableView.indexPath(for: cell),
+                    currentIndexPath != indexPath {
+                    return
+                }
+                cell.recipeImage.image = image
+                cell.setNeedsLayout()
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -74,6 +91,10 @@ class RecipeTableViewController: UITableViewController {
             destinationViewController.interactor = interactor
             destinationViewController.currentViewController = self
             destinationViewController.delegate = self
+        } else if segue.identifier == "SegueFromRecipesToRecipeDetail" {
+            let destinationViewController = segue.destination as! RecipeDetailViewController
+            let index = tableView.indexPathForSelectedRow!.section
+            destinationViewController.recipe = self.recipes[index]
         }
     }
 }
@@ -98,6 +119,8 @@ extension RecipeTableViewController: SideMenuDelegate {
         }
         
     }
+    
+    
 }
 
 extension RecipeTableViewController: UIViewControllerTransitioningDelegate {

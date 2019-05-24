@@ -17,8 +17,17 @@ class MyGroupsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadGroups()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: GroupController.groupDataUpdatedNotification, object: nil)
+        
+        updateUI()
+        
+//        loadGroups()
         setupView()
+    }
+    
+    @objc func updateUI() {
+        self.groups = GroupController.shared.groups
+        self.tableView.reloadData()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -54,11 +63,11 @@ class MyGroupsTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem?.tintColor = customColors.customPink
     }
     
-    func loadGroups() {
-        // if ...
-        
-        groups = Group.loadSampleGroups()
-    }
+//    func loadGroups() {
+//        // if ...
+//
+//        groups = Group.loadSampleGroups()
+//    }
     
     @IBAction func menuButtonTapped(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: "openMenuFromMyGroups", sender: nil)
@@ -84,7 +93,7 @@ extension MyGroupsTableViewController: SideMenuDelegate {
             }
             
             UserController.shared.logoutUser {
-                self.performSegue(withIdentifier: "signOutFromMyGroups", sender: nil)
+                self.performSegue(withIdentifier: "SignOutFromMyGroups", sender: nil)
             }
         case "Recipes":
             performSegue(withIdentifier: "SegueFromMyGroupsToRecipes", sender: nil)
