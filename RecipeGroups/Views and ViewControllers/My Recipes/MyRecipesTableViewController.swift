@@ -35,13 +35,13 @@ class MyRecipesTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as! MyRecipesTableViewCell
-//        configure(cell, forItemAt: indexPath)
+        configure(cell, forItemAt: indexPath)
         
         /* comment the following to remove sample images */
         
-        let recipe = recipes[indexPath.section]
-        cell.recipeLabel.text = recipe.name
-        cell.recipeImage.image = recipe.image
+//        let recipe = recipes[indexPath.section]
+//        cell.recipeLabel.text = recipe.name
+//        cell.recipeImage.image = recipe.image
         
         return cell
     }
@@ -56,6 +56,9 @@ class MyRecipesTableViewController: UITableViewController {
     @objc func updateUI() {
         print("update UI test")
         self.recipes = RecipeController.shared.recipes.filter({ $0.author == UserController.shared.user!.email })
+        if let likedRecipes = RecipeController.shared.loadLikedRecipes() {
+            self.recipes += likedRecipes
+        }
         self.tableView.reloadData()
     }
     
@@ -87,6 +90,10 @@ class MyRecipesTableViewController: UITableViewController {
             destinationViewController.interactor = interactor
             destinationViewController.currentViewController = self
             destinationViewController.delegate = self
+        } else if segue.identifier == "SegueFromMyRecipesToRecipeDetailView" {
+            let destinationViewController = segue.destination as! RecipeDetailViewController
+            let index = tableView.indexPathForSelectedRow!.section
+            destinationViewController.recipe = self.recipes[index]
         }
     }
 }

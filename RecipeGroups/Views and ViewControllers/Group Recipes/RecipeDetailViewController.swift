@@ -7,20 +7,19 @@
 //
 
 import UIKit
+import PDFKit
 
 class RecipeDetailViewController: UIViewController {
 
     private lazy var childSteps: ChildStepsTableViewController = {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         var viewController = storyboard.instantiateViewController(withIdentifier: "ChildSteps") as! ChildStepsTableViewController
-        self.addChild(viewController)
         
         return viewController
     }()
     private lazy var childIngredients: ChildIngredientsTableViewController = {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         var viewController = storyboard.instantiateViewController(withIdentifier: "ChildIngredients") as! ChildIngredientsTableViewController
-        self.addChild(viewController)
         
         return viewController
     }()
@@ -35,12 +34,11 @@ class RecipeDetailViewController: UIViewController {
     @IBOutlet weak var recipeCookTimeLabel: UILabel!
     @IBOutlet weak var difficultyLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-    
+    @IBOutlet weak var cookTimeImage: UIImageView!
+    @IBOutlet weak var difficultyImage: UIImageView!
     
     let customColors = CustomColors()
-    
     var recipe: Recipe?
-    
     var showSteps: Bool = true
     
     override func viewDidLoad() {
@@ -48,6 +46,9 @@ class RecipeDetailViewController: UIViewController {
         
         setupCustomSwitch()
         addChildView(withChild: childSteps)
+        guard let recipe = recipe else { return }
+        childSteps.steps = recipe.steps
+        childSteps.tableView.reloadData()
         setupView()
     }
     
@@ -87,12 +88,10 @@ class RecipeDetailViewController: UIViewController {
     func addChildView(withChild child: UITableViewController) {
         addChild(child)
         containerView.addSubview(child.tableView)
-            //        child.tableView.center = containerView.center
+        
         child.tableView.frame = containerView.bounds
         child.tableView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         child.tableView.layoutMargins = UIEdgeInsets.zero
-        
-//        child.tableView.separatorInset = UIEdgeInsets.zero
         child.didMove(toParent: self)
     }
     
@@ -102,10 +101,12 @@ class RecipeDetailViewController: UIViewController {
             removeChildView(childViewController: childIngredients)
             addChildView(withChild: childSteps)
             childSteps.steps = recipe.steps
+            childSteps.tableView.reloadData()
         } else {
             removeChildView(childViewController: childSteps)
             addChildView(withChild: childIngredients)
             childIngredients.ingredients = recipe.ingredients
+            childIngredients.tableView.reloadData()
         }
     }
     
@@ -117,20 +118,22 @@ class RecipeDetailViewController: UIViewController {
     
     func setupView() {
         guard let recipe = recipe else { return }
-        
-//        setupImage(with: recipe)
+        self.navigationItem.title = recipe.name
+        setupImage(with: recipe)
         
         /* Comment the below to get rid of samples */
-        recipeImage.image = recipe.image
+//        recipeImage.image = recipe.image
         
         recipeTitleLabel.text = recipe.name
         recipeCookTimeLabel.text = recipe.cookTime.rawValue
         difficultyLabel.text = recipe.cookingDifficulty.rawValue
         descriptionLabel.text = recipe.description
+        cookTimeImage.tintColor = customColors.customPink
+        difficultyImage.tintColor = customColors.customPink
+        
     }
     
     func setupImage(with recipe: Recipe) {
-        
         RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
             guard let image = image else { return }
             DispatchQueue.main.async {
@@ -138,4 +141,46 @@ class RecipeDetailViewController: UIViewController {
             }
         }
     }
+    @IBAction func exportButtonClicked(_ sender: Any) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let pdfAction = UIAlertAction(title: "View as PDF", style: .default) { (_) in
+            self.performSegue(withIdentifier: "SegueFromRecipeDetailToPDF", sender: nil)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let shareAction = UIAlertAction(title: "Share as PDF", style: .default) { (_) in
+            guard let recipe = self.recipe else { return }
+            let pdfData = PDFCreator.shared.createPDFFromRecipe(recipe: recipe)
+            let pdfDocument = PDFDocument(data: pdfData)
+    
+            let activityController = UIActivityViewController(activityItems: [pdfDocument as Any], applicationActivities: nil)
+            
+            // On iPads, a UIActivityController is presented inside of a popover
+            activityController.popoverPresentationController?.sourceView = self.view
+            self.present(activityController, animated: true, completion: nil)
+        }
+        alertController.addAction(pdfAction)
+        alertController.addAction(cancelAction)
+        alertController.addAction(shareAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destinationViewController = segue.destination as? PDFViewController {
+            destinationViewController.recipe = recipe
+        }
+    }
+
+    @IBAction func likeButtonTapped(_ sender: UIButton) {
+        guard let recipe = recipe else { return }
+        RecipeController.shared.saveLikedRecipe(recipe)
+    }
+    
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        guard let recipe = recipe else { return }
+        // to do
+        // coder.encode(...
+    }
+    
+
 }

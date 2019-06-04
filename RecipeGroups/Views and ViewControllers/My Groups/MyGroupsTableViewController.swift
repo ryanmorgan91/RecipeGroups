@@ -44,7 +44,7 @@ class MyGroupsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MyGroupsCell", for: indexPath) as! MyGroupsTableViewCell
         
-        let group = groups[indexPath.row]
+        let group = groups[indexPath.section]
         cell.setupCell()
         cell.groupLabel.text = group.name
 
@@ -79,7 +79,26 @@ class MyGroupsTableViewController: UITableViewController {
             destinationViewController.interactor = interactor
             destinationViewController.currentViewController = self
             destinationViewController.delegate = self
+        } else if let destinationViewController = segue.destination as? GroupDetailTableViewController {
+            let index = tableView.indexPathForSelectedRow!.section
+            destinationViewController.group = groups[index]
         }
+    }
+    
+    
+    @IBAction func plusButtonTapped(_ sender: UIBarButtonItem) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let joinGroupAction = UIAlertAction(title: "Join a Group", style: .default) { (_) in
+            self.performSegue(withIdentifier: "SegueFromMyGroupsToJoinAGroup", sender: nil)
+        }
+        let createGroupAction = UIAlertAction(title: "Create a Group", style: .default) { (_) in
+            self.performSegue(withIdentifier: "SegueFromMyGroupsToCreateAGroup", sender: nil)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(joinGroupAction)
+        alertController.addAction(createGroupAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -88,10 +107,6 @@ extension MyGroupsTableViewController: SideMenuDelegate {
 
         switch menuButton {
         case "Logout":
-            if UserController.shared.user?.name == "Ryan" {
-                self.performSegue(withIdentifier: "SignOutFromMyGroups", sender: nil)
-            }
-            
             UserController.shared.logoutUser {
                 self.performSegue(withIdentifier: "SignOutFromMyGroups", sender: nil)
             }

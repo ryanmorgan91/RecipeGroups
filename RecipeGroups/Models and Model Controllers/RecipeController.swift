@@ -46,7 +46,7 @@ class RecipeController {
         
         guard let user = UserController.shared.user else { return }
         
-        let data: [String: Any] = [
+        let textData: [String: Any] = [
             "email": user.email,
             "title": recipe.name,
             "description": recipe.description,
@@ -64,7 +64,7 @@ class RecipeController {
         
         guard let imageData = recipe.image?.jpegData(compressionQuality: 1.0) else { return }
         
-        request.httpBody = createBody(parameters: data, arrayParameters: arrayParameters, boundary: boundary, data: imageData, mimeType: "image/jpg", filename: imageFileName)
+        request.httpBody = createBody(parameters: textData, arrayParameters: arrayParameters, boundary: boundary, data: imageData, mimeType: "image/jpg", filename: imageFileName)
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             let jsonDecoder = JSONDecoder()
@@ -168,13 +168,13 @@ class RecipeController {
         
         
         guard let user = UserController.shared.user else { return }
-        let data: [String: String] = ["email": user.email]
+        let sentData: [String: String] = ["email": user.email]
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         
         let jsonEncoder = JSONEncoder()
-        let jsonData = try? jsonEncoder.encode(data)
+        let jsonData = try? jsonEncoder.encode(sentData)
         request.httpBody = jsonData
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
@@ -196,7 +196,23 @@ class RecipeController {
     }
     
     
-    func loadRecipes() {
-        recipes = Recipe.loadSampleRecipes()
+    func loadLikedRecipes() -> [Recipe]? {
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
+        guard let data = try? Data(contentsOf: recipeFileURL) else { return nil }
+        let jsonDecoder = JSONDecoder()
+        if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
+            return recipes
+        }
+        return nil
+    }
+    
+    func saveLikedRecipe(_ recipe: Recipe) {
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
+        let jsonEncoder = JSONEncoder()
+        if let data = try? jsonEncoder.encode(recipe) {
+            try? data.write(to: recipeFileURL)
+        }
     }
 }

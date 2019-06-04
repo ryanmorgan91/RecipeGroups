@@ -10,12 +10,9 @@ import UIKit
 
 class LoginViewController: UIViewController {
 
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    
     @IBOutlet weak var loginButton: UIButton!
-    
-    var userIsLoggedIn = false
+
+    var childViewController: LoginChildTableViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,13 +20,14 @@ class LoginViewController: UIViewController {
         setupView()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        if userIsLoggedIn {
-            performSegue(withIdentifier: "segueToMainVC", sender: nil)
-        }
+    func createReference(to childViewController: LoginChildTableViewController) {
+        self.childViewController = childViewController
     }
 
     @IBAction func loginButtonTapped(_ sender: UIButton) {
+        guard let emailTextField = childViewController?.emailTextField else { return }
+        guard let passwordTextField = childViewController?.passwordTextField else { return }
+        
         
         if emailTextField.text == "" {
             animateTextField(textField: emailTextField)
@@ -43,34 +41,27 @@ class LoginViewController: UIViewController {
         let password = passwordTextField.text!
         let activityIndicatorBackground = displayActivityIndicator(onView: self.view)
         
-        UserController.shared.loginUser(email: email, password: password) {
+        UserController.shared.loginUser(email: email, password: password) { (success) in
             
             self.removeActivityIndicator(activityBackgroundView: activityIndicatorBackground)
-            if UserController.shared.successfulLogin {
+            if success {
+                print("Login test - success")
                 self.performSegue(withIdentifier: "segueToMainVC", sender: nil)
             } else {
                 let alertController = UIAlertController(title: "Error", message: "Incorrect email or password", preferredStyle: .alert)
                 let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
                 alertController.addAction(alertAction)
                 self.present(alertController, animated: true, completion: nil)
-                
             }
         }
-        // To Do: Make sure email address is of type email address
-        
     }
     
     func setupView() {
         let customColors = CustomColors()
         
-        emailTextField.text = ""
-        passwordTextField.text = ""
-        passwordTextField.isSecureTextEntry = true
         loginButton.backgroundColor = .white
         loginButton.setTitleColor(customColors.customPink, for: .normal)
         loginButton.layer.cornerRadius = 10
-        emailTextField.autocapitalizationType = .none
-        passwordTextField.autocapitalizationType = .none
     }
     
     func animateTextField(textField: UITextField) {

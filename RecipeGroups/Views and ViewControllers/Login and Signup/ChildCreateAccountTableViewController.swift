@@ -21,10 +21,14 @@ class ChildCreateAccountTableViewController: UITableViewController {
         
         self.tableView.contentInset = .zero
         firstPasswordTextField.isSecureTextEntry = true
+        firstPasswordTextField.textContentType = .newPassword
+        
         secondPasswordTextField.isSecureTextEntry = true
+        secondPasswordTextField.textContentType = .newPassword
+        
         emailTextField.autocapitalizationType = .none
-        firstPasswordTextField.autocapitalizationType = .none
-        secondPasswordTextField.autocapitalizationType = .none
+        emailTextField.textContentType = .username
+        emailTextField.keyboardType = .emailAddress
     }
 
     override func viewDidAppear(_ animated: Bool) {

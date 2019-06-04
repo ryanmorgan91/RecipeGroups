@@ -291,7 +291,13 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         {
             let alertController = UIAlertController(title: "Oops", message: "All fields must be completed to save a recipe", preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-            return
+            alertController.addAction(alertAction)
+            present(alertController, animated: true, completion: nil)
+        } else if RecipeController.shared.recipes.contains(where: { $0.name == titleTextField.text! }) {
+            let alertController = UIAlertController(title: "Oops", message: "You cannot have two recipes with the same name", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+            alertController.addAction(alertAction)
+            present(alertController, animated: true, completion: nil)
         } else {
             let email = UserController.shared.user?.email ?? ""
             
@@ -301,7 +307,4 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
             }
         }
     }
-    
-    
-    
 }

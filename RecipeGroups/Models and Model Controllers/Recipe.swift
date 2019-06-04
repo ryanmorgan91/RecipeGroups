@@ -85,7 +85,7 @@ final class Recipe: Codable {
     }
     
     static func loadSampleRecipes() -> [Recipe] {
-        let macarons = Recipe(name: "Macarons", image: UIImage(named: "Macarons")!, cookTime: .sixty, cookingDifficulty: .hard, category: .dessert, description: "Lovely french macarons", ingredients: ["Ingredient 1"], steps: ["Step 1"], author: "johnsmith@example.com")
+        let macarons = Recipe(name: "Macarons", image: UIImage(named: "Macarons")!, cookTime: .sixty, cookingDifficulty: .hard, category: .dessert, description: "Lovely french macarons", ingredients: ["Ingredient 1"], steps: ["Step 1", "Step 2", "Step 3"], author: "johnsmith@example.com")
         let raspberryCheesecake = Recipe(name: "Raspberry Cheesecake", image: UIImage(named: "RaspberryCheesecake")!, cookTime: .sixty, cookingDifficulty: .medium, category: .dessert, description: "Classic raspberry cheesecake", ingredients: ["Ingredient 1"], steps: ["Step 1"], author: "johnsmith@example.com")
         let cherryPie = Recipe(name: "Cherry Pie", image: UIImage(named: "CherryPie")!, cookTime: .seventyFive, cookingDifficulty: .easy, category: .dessert, description: "Home-cooked apple pie!", ingredients: ["Ingredient 1"], steps: ["Step 1"], author: "johnsmith@example.com")
         let tiramisu = Recipe(name: "Tiramisu", image: UIImage(named: "Tiramisu")!, cookTime: .ninety, cookingDifficulty: .hard, category: .dessert, description: "Italian tiramisu", ingredients: ["Ingredient 1"], steps: ["Step 1"], author: "johnsmith@example.com")

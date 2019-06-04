@@ -34,13 +34,13 @@ class RecipeTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as! RecipeTableViewCell
-//        configure(cell, forItemAt: indexPath)
+        configure(cell, forItemAt: indexPath)
         
         /* comment the following to remove sample images */
         
-        let recipe = recipes[indexPath.section]
-        cell.recipeLabel.text = recipe.name
-        cell.recipeImage.image = recipe.image
+//        let recipe = recipes[indexPath.section]
+//        cell.recipeLabel.text = recipe.name
+//        cell.recipeImage.image = recipe.image
         
         return cell
     }
@@ -50,9 +50,7 @@ class RecipeTableViewController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.rowHeight = 200
         navigationItem.leftBarButtonItem?.tintColor = customColors.customPink
-        let logoImage = UIImage(named: "RecipeGroupsSize26")
-        let logoImageView = UIImageView(image: logoImage)
-        navigationItem.titleView = logoImageView
+        
     }
     
     @objc func updateUI() {
