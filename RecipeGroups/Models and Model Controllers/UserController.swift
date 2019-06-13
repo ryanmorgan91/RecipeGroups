@@ -14,17 +14,17 @@ class UserController {
     
     var user: User?
     
-    let baseURL = URL(string: "http://127.0.0.1:5000/")!
+    let baseURL = RecipeController.shared.baseURL
     
     func updateUser(name: String, email: String) {
         self.user = User(name: name, email: email)
         
         /* To turn off networking and use samples instead, commenting the following and uncomment the rows below */
-        RecipeController.shared.fetchRecipes()
-        GroupController.shared.fetchGroups()
+//        RecipeController.shared.fetchRecipes()
+//        GroupController.shared.fetchGroups()
         
-//        RecipeController.shared.recipes = Recipe.loadSampleRecipes()
-//        RecipeController.shared.process(recipes: RecipeController.shared.recipes)
+        RecipeController.shared.recipes = Recipe.loadSampleRecipes()
+        RecipeController.shared.process(recipes: RecipeController.shared.recipes)
 //        GroupController.shared.groups = Group.loadSampleGroups()
         
         
@@ -150,5 +150,25 @@ class UserController {
             }
         }
         task.resume()
+    }
+    
+    func saveUser() {
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let userFileURL = documentsDirectoryURL.appendingPathComponent("user").appendingPathExtension("json")
+        let jsonEncoder = JSONEncoder()
+        if let data = try? jsonEncoder.encode(user) {
+            try? data.write(to: userFileURL)
+        }
+    }
+   
+    func loadUser() -> User? {
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let userFileURL = documentsDirectoryURL.appendingPathComponent("user").appendingPathExtension("json")
+        guard let data = try? Data(contentsOf: userFileURL) else { return nil }
+        let jsonDecoder = JSONDecoder()
+        if let user = try? jsonDecoder.decode([User].self, from: data) {
+            return user.last
+        }
+        return nil
     }
 }

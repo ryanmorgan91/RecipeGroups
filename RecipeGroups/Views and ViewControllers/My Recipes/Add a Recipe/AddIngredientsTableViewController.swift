@@ -15,7 +15,7 @@ class AddIngredientsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationItem.leftBarButtonItem = editButtonItem
+        self.navigationItem.rightBarButtonItem = editButtonItem
 
     }
 
@@ -26,8 +26,8 @@ class AddIngredientsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "IngredientCell", for: indexPath) as! AddIngredientTableViewCell
-        let customColors = CustomColors()
-        cell.stepBullet.tintColor = customColors.customPink
+        
+        cell.stepBullet.tintColor = CustomStyles.shared.customPink
         cell.ingredientTextField.text = ingredients[indexPath.row]
         return cell
     }

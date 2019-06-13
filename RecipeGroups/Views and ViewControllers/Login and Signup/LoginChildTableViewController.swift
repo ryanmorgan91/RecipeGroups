@@ -36,10 +36,12 @@ class LoginChildTableViewController: UITableViewController {
         passwordTextField.isSecureTextEntry = true
         passwordTextField.textContentType = .password
         passwordTextField.autocapitalizationType = .none
+        passwordTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         
         emailTextField.autocapitalizationType = .none
         emailTextField.textContentType = .username
         emailTextField.keyboardType = .emailAddress
+        emailTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         
         self.tableView.backgroundColor = .clear
     }

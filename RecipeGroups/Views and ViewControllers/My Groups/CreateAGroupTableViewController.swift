@@ -59,15 +59,17 @@ class CreateAGroupTableViewController: UITableViewController {
     }
 
     func setupView() {
-        let customColors = CustomColors()
-        groupImage.tintColor = customColors.customPink
-        passwordImage.tintColor = customColors.customPink
-        reenterPasswordImage.tintColor = customColors.customPink
+        groupImage.tintColor = CustomStyles.shared.customPink
+        passwordImage.tintColor = CustomStyles.shared.customPink
+        reenterPasswordImage.tintColor = CustomStyles.shared.customPink
         
         passwordTextField.textContentType = .newPassword
         passwordTextField.isSecureTextEntry = true
         reenterPasswordTextField.textContentType = .newPassword
         reenterPasswordTextField.isSecureTextEntry = true
+        groupNameTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        passwordTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        reenterPasswordTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
     
 }

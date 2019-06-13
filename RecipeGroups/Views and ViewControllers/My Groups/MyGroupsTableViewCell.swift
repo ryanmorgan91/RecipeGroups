@@ -26,9 +26,9 @@ class MyGroupsTableViewCell: UITableViewCell {
     }
     
     func setupCell() {
-        let customColors = CustomColors()
-        backgroundLayer.backgroundColor = customColors.customBlue
+        backgroundLayer.backgroundColor = CustomStyles.shared.customPink
         groupLabel.textColor = .white
+        groupLabel.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 20)
     }
 
 }

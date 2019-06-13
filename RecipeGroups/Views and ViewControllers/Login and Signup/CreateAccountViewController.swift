@@ -23,10 +23,12 @@ class CreateAccountViewController: UIViewController {
     }
     
     func setupView() {
-        let customColors = CustomColors()
+        
         signInButton.setTitleColor(.white, for: .normal)
-        signInButton.backgroundColor = customColors.customPink
+        signInButton.backgroundColor = CustomStyles.shared.customPink
         signInButton.layer.cornerRadius = 10
+        signInButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 24)
+        
     }
     
     func createReference(to childViewController: ChildCreateAccountTableViewController) {
@@ -41,11 +43,15 @@ class CreateAccountViewController: UIViewController {
         
         if (name == "" || email == "" || firstPasswordTextField?.text == "" || secondPasswordTextField?.text == "") {
             
-            // TO DO animate
+            let alertController = UIAlertController(title: "Oops", message: "All fields must be filled in", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+            alertController.addAction(alertAction)
+            present(alertController, animated: true, completion: nil)
+
             return
             
         } else if (firstPasswordTextField?.text != secondPasswordTextField?.text) {
-            let alertController = UIAlertController(title: "Error", message: "Passwords do not match!", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Oops", message: "Your passwords don't match.", preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
             alertController.addAction(alertAction)
             present(alertController, animated: true, completion: nil)
@@ -54,8 +60,12 @@ class CreateAccountViewController: UIViewController {
         }
         
         guard let password = firstPasswordTextField?.text else { return }
+        let activityIndicatorBackground = displayActivityIndicator(onView: self.view)
         
         UserController.shared.registerUser(name: name, email: email, password: password) { (result) in
+            // Remove activity indicator
+            self.removeActivityIndicator(activityBackgroundView: activityIndicatorBackground)
+            
             if result == "Success" {
                 UserController.shared.user = User(name: name, email: email)
                 

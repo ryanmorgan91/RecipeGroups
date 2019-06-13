@@ -8,7 +8,7 @@
 
 import Foundation
 
-class User {
+class User: Codable {
     
     var name: String
     var email: String
@@ -19,4 +19,6 @@ class User {
         self.name = name
         self.email = email
     }
+    
+    
 }

@@ -20,8 +20,8 @@ class IntroViewController: UIViewController {
     
     
     func setupView() {
-        let customColors = CustomColors()
-        signUpButton.backgroundColor = customColors.customPink
+        
+        signUpButton.backgroundColor = CustomStyles.shared.customPink
         signUpButton.setTitleColor(.white, for: .normal)
         signUpButton.layer.cornerRadius = 10
         

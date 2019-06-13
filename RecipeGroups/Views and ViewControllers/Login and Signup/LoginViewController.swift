@@ -11,7 +11,8 @@ import UIKit
 class LoginViewController: UIViewController {
 
     @IBOutlet weak var loginButton: UIButton!
-
+    @IBOutlet weak var createAccountLabel: UIButton!
+    @IBOutlet weak var forgotPasswordLabel: UIButton!
     var childViewController: LoginChildTableViewController?
     
     override func viewDidLoad() {
@@ -45,7 +46,6 @@ class LoginViewController: UIViewController {
             
             self.removeActivityIndicator(activityBackgroundView: activityIndicatorBackground)
             if success {
-                print("Login test - success")
                 self.performSegue(withIdentifier: "segueToMainVC", sender: nil)
             } else {
                 let alertController = UIAlertController(title: "Error", message: "Incorrect email or password", preferredStyle: .alert)
@@ -57,11 +57,14 @@ class LoginViewController: UIViewController {
     }
     
     func setupView() {
-        let customColors = CustomColors()
         
         loginButton.backgroundColor = .white
-        loginButton.setTitleColor(customColors.customPink, for: .normal)
+        loginButton.setTitleColor(CustomStyles.shared.customPink, for: .normal)
         loginButton.layer.cornerRadius = 10
+        loginButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 24)
+        forgotPasswordLabel.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        createAccountLabel.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        
     }
     
     func animateTextField(textField: UITextField) {

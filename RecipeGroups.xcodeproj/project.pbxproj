@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9D1F2EE0229778D7001AC220 /* GroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1F2EDF229778D7001AC220 /* GroupController.swift */; };
-		9D4BBCAD228A10480036488C /* CustomColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4BBCAC228A10480036488C /* CustomColors.swift */; };
+		9D4BBCAD228A10480036488C /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4BBCAC228A10480036488C /* CustomStyles.swift */; };
 		9D540D092288EFD00090B7D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D540D082288EFD00090B7D2 /* AppDelegate.swift */; };
 		9D540D0E2288EFD00090B7D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D540D0C2288EFD00090B7D2 /* Main.storyboard */; };
 		9D540D112288EFD00090B7D2 /* RecipeGroups.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9D540D0F2288EFD00090B7D2 /* RecipeGroups.xcdatamodeld */; };
@@ -65,7 +65,7 @@
 
 /* Begin PBXFileReference section */
 		9D1F2EDF229778D7001AC220 /* GroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupController.swift; sourceTree = "<group>"; };
-		9D4BBCAC228A10480036488C /* CustomColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColors.swift; sourceTree = "<group>"; };
+		9D4BBCAC228A10480036488C /* CustomStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyles.swift; sourceTree = "<group>"; };
 		9D540D052288EFD00090B7D2 /* RecipeGroups.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeGroups.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D540D082288EFD00090B7D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D540D0D2288EFD00090B7D2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -179,7 +179,7 @@
 			children = (
 				9D540D252288FBDA0090B7D2 /* ShadowCellView.swift */,
 				9DF6B3D6228F410A0089F954 /* CellBackgroundView.swift */,
-				9D4BBCAC228A10480036488C /* CustomColors.swift */,
+				9D4BBCAC228A10480036488C /* CustomStyles.swift */,
 				9DF6B3AC228CEFC60089F954 /* Extensions.swift */,
 				9D540D472289FEE80090B7D2 /* CustomSwitchView.swift */,
 				9DF6B3B2228D42C60089F954 /* Side Menu */,
@@ -243,8 +243,8 @@
 				9DF6B3AE228CF44A0089F954 /* UserController.swift */,
 				9DF6B3C6228E32E80089F954 /* User.swift */,
 				9DEE6E2B228A222300D1817B /* RecipeController.swift */,
-				9D866F5722A1EA9F00D783DA /* PDFCreator.swift */,
 				9D540D232288F4F20090B7D2 /* Recipe.swift */,
+				9D866F5722A1EA9F00D783DA /* PDFCreator.swift */,
 				9DF6B3D2228F3D720089F954 /* Group.swift */,
 				9D1F2EDF229778D7001AC220 /* GroupController.swift */,
 			);
@@ -393,7 +393,7 @@
 				9DF6B3AA228CEAB60089F954 /* LoginViewController.swift in Sources */,
 				9D540D462289FE5F0090B7D2 /* RecipeDetailViewController.swift in Sources */,
 				9D866F5F22A25B6200D783DA /* LoginChildTableViewController.swift in Sources */,
-				9D4BBCAD228A10480036488C /* CustomColors.swift in Sources */,
+				9D4BBCAD228A10480036488C /* CustomStyles.swift in Sources */,
 				9DF6B3E52294CA440089F954 /* AddIngredientsTableViewController.swift in Sources */,
 				9D540D092288EFD00090B7D2 /* AppDelegate.swift in Sources */,
 				9DEE6E3E228B3C6600D1817B /* StepTableViewCell.swift in Sources */,

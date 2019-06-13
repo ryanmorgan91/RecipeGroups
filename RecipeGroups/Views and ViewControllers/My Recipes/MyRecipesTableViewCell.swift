@@ -17,6 +17,7 @@ class MyRecipesTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        recipeLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         // Initialization code
     }
 

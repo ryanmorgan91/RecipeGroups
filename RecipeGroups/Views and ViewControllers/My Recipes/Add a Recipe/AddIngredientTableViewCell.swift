@@ -16,6 +16,7 @@ class AddIngredientTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        ingredientTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

@@ -16,8 +16,8 @@ class IngredientsTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        let customColors = CustomColors()
-        ingredientBullet.tintColor = customColors.customBlue
+        ingredientBullet.tintColor = CustomStyles.shared.customPink
+        ingredientLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

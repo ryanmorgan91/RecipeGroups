@@ -29,6 +29,11 @@ class ChildCreateAccountTableViewController: UITableViewController {
         emailTextField.autocapitalizationType = .none
         emailTextField.textContentType = .username
         emailTextField.keyboardType = .emailAddress
+        nameTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        emailTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        firstPasswordTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        secondPasswordTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {

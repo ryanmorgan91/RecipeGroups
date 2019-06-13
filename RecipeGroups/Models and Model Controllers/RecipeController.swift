@@ -34,7 +34,7 @@ class RecipeController {
     
     var recipes: [Recipe] = []
     
-    let baseURL = URL(string: "http://127.0.0.1:5000/")!
+    let baseURL = URL(string: "http://3.19.58.34:80/")!
     //    let queries: [String: String] = ["user":"ryan"]
 
     func sendRecipe(recipe: Recipe, completion: @escaping () -> ()) {
@@ -62,7 +62,7 @@ class RecipeController {
         
         let imageFileName = "recipeImage.jpg"
         
-        guard let imageData = recipe.image?.jpegData(compressionQuality: 1.0) else { return }
+        guard let imageData = recipe.image?.jpegData(compressionQuality: 0.6) else { return }
         
         request.httpBody = createBody(parameters: textData, arrayParameters: arrayParameters, boundary: boundary, data: imageData, mimeType: "image/jpg", filename: imageFileName)
         
@@ -126,7 +126,7 @@ class RecipeController {
 //        var request = URLRequest(url: url)
 //        request.httpMethod = "POST"
 //        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//        guard let imageData = recipe.image.jpegData(compressionQuality: 1.0) else { return }
+//        guard let imageData = recipe.image.jpegData(compressionQuality: 0.6) else { return }
 //        let imageDataAsString = imageData.base64EncodedString(options: .lineLength64Characters)
 //
 //        let data: [String: Any] = [
@@ -153,19 +153,17 @@ class RecipeController {
         
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
-            print("process test 2")
+            
         }
     }
     
     func processNew(recipe: Recipe) {
         self.recipes.insert(recipe, at: 0)
-        
         NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
     }
     
     func fetchRecipes() {
         let url = baseURL.appendingPathComponent("get_recipes_by_groups")
-        
         
         guard let user = UserController.shared.user else { return }
         let sentData: [String: String] = ["email": user.email]
@@ -179,7 +177,6 @@ class RecipeController {
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             let jsonDecoder = JSONDecoder()
-            
             
             if let data = data,
 //                let result = String(data: data, encoding: .utf8) {
@@ -215,4 +212,5 @@ class RecipeController {
             try? data.write(to: recipeFileURL)
         }
     }
+    
 }

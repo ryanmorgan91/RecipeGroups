@@ -15,7 +15,7 @@ class AddStepsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.leftBarButtonItem = editButtonItem
+        self.navigationItem.rightBarButtonItem = editButtonItem
         
     }
     
@@ -26,8 +26,7 @@ class AddStepsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "StepCell", for: indexPath) as! AddStepsTableViewCell
-        let customColors = CustomColors()
-        cell.stepBullet.tintColor = customColors.customPink
+        cell.stepBullet.tintColor = CustomStyles.shared.customPink
         cell.stepTextField.text = steps[indexPath.row]
         return cell
     }

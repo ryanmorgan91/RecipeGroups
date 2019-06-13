@@ -57,10 +57,9 @@ class MyGroupsTableViewController: UITableViewController {
     }
 
     func setupView() {
-        let customColors = CustomColors()
         tableView.separatorStyle = .none
         tableView.rowHeight = 100
-        navigationItem.leftBarButtonItem?.tintColor = customColors.customPink
+        navigationItem.leftBarButtonItem?.tintColor = CustomStyles.shared.customPink
     }
     
 //    func loadGroups() {

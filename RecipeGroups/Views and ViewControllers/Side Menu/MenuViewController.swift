@@ -27,10 +27,10 @@ class MenuViewController: UIViewController {
     }
     
     func setupView() {
-        let customColors = CustomColors()
+        userNameLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         userNameLabel.text = UserController.shared.user?.name
-        userIcon.tintColor = customColors.customBlue
-        userNameLabel.textColor = customColors.customBlue
+        userIcon.tintColor = CustomStyles.shared.customBlue
+        userNameLabel.textColor = CustomStyles.shared.customBlue
     }
     
     @IBAction func closeMenu(_ sender: Any) {

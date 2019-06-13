@@ -11,6 +11,12 @@ import UIKit
 class ChildMenuTableViewController: UITableViewController {
 
     weak var delegate: SideMenuDelegate?
+ 
+    
+    @IBOutlet weak var recipesButton: UIButton!
+    @IBOutlet weak var myGroupsButton: UIButton!
+    @IBOutlet weak var myRecipesButton: UIButton!
+    @IBOutlet weak var logoutButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +28,12 @@ class ChildMenuTableViewController: UITableViewController {
         parentViewController.createReference(to: self)
     }
 
+    func setupView() {
+        recipesButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        myGroupsButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        myRecipesButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        logoutButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+    }
     
     @IBAction func recipesButtonTapped(_ sender: UIButton) {
         delegate?.userTapped(menuButton: "Recipes")

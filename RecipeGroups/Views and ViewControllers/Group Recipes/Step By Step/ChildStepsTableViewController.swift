@@ -11,7 +11,7 @@ import UIKit
 class ChildStepsTableViewController: UITableViewController {
 
     var steps: [String] = ["Step 1 is ...", "Step 2 ..."]
-    let customColors = CustomColors()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,10 +32,15 @@ class ChildStepsTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "stepCell", for: indexPath) as! StepTableViewCell
         cell.stepLabel.text = steps[indexPath.row]
-        cell.stepBullet.tintColor = customColors.customGray
-        
+        cell.stepBullet.tintColor = CustomStyles.shared.customPink
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let cell = tableView.cellForRow(at: indexPath) as! StepTableViewCell
+        cell.isComplete = !cell.isComplete
     }
     
 //    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

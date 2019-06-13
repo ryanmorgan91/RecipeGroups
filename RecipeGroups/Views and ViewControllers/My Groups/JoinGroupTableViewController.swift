@@ -23,10 +23,11 @@ class JoinGroupTableViewController: UITableViewController {
     }
 
     func setupView() {
-        let customColors = CustomColors()
-        groupNameImage.tintColor = customColors.customPink
-        passwordImage.tintColor = customColors.customPink
+        groupNameImage.tintColor = CustomStyles.shared.customPink
+        passwordImage.tintColor = CustomStyles.shared.customPink
         passwordTextField.isSecureTextEntry = true
+        groupNameTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        passwordTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
 
     @IBAction func joinButtonTapped(_ sender: UIBarButtonItem) {

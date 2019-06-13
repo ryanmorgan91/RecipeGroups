@@ -22,11 +22,12 @@ class ResetPasswordViewController: UIViewController {
     }
     
     func setupView() {
-        let customColors = CustomColors()
+        let customSyles = CustomStyles()
         resetPasswordButton.setTitle(resetPassword, for: .normal)
         resetPasswordButton.backgroundColor = .white
-        resetPasswordButton.setTitleColor(customColors.customPink, for: .normal)
-        
+        resetPasswordButton.setTitleColor(customSyles.customPink, for: .normal)
+        resetPasswordButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 24)
+        resetPasswordButton.layer.cornerRadius = 10
         self.navigationItem.title = resetPassword
     }
     

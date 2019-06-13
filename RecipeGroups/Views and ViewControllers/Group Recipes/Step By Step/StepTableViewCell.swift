@@ -14,15 +14,23 @@ class StepTableViewCell: UITableViewCell {
     @IBOutlet weak var completeButton: UIButton!
     @IBOutlet weak var stepBullet: UIImageView!
     
+    var isComplete = false {
+        didSet {
+            completeButton.isSelected = isComplete
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        stepLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
     }
-
+    
+    
+    
 }

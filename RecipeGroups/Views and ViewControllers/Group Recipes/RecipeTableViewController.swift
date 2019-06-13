@@ -34,22 +34,23 @@ class RecipeTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as! RecipeTableViewCell
-        configure(cell, forItemAt: indexPath)
+        
+        /* Comment the following to add samples */
+//        configure(cell, forItemAt: indexPath)
         
         /* comment the following to remove sample images */
         
-//        let recipe = recipes[indexPath.section]
-//        cell.recipeLabel.text = recipe.name
-//        cell.recipeImage.image = recipe.image
+        let recipe = recipes[indexPath.section]
+        cell.recipeLabel.text = recipe.name
+        cell.recipeImage.image = recipe.image
         
         return cell
     }
     
     func setupView() {
-        let customColors = CustomColors()
         tableView.separatorStyle = .none
         tableView.rowHeight = 200
-        navigationItem.leftBarButtonItem?.tintColor = customColors.customPink
+        navigationItem.leftBarButtonItem?.tintColor = CustomStyles.shared.customPink
         
     }
     

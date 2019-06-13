@@ -17,13 +17,12 @@ class PDFCreator {
     static let margin: CGFloat = 50
     let printablePageRect = PDFCreator.pageRect.insetBy(dx: PDFCreator.margin, dy: PDFCreator.margin)
     let spacing: CGFloat = 10
-    var currentOffset = CGPoint(x: PDFCreator.margin, y: PDFCreator.margin)
+    var currentOffset = CGPoint(x: 0, y: PDFCreator.margin + 10)
     
     // Creates a PDF based on a custom type "Recipe"
     // Returns PDF as Data, which can be shown in a PDFKit PDFViewer
     func createPDFFromRecipe(recipe: Recipe) -> Data {
-        currentOffset = CGPoint(x: PDFCreator.margin, y: PDFCreator.margin)
-        
+        currentOffset = CGPoint(x: 0, y: PDFCreator.margin)
         let renderer = UIGraphicsPDFRenderer(bounds: PDFCreator.pageRect)
         let data = renderer.pdfData { (context) in
             context.beginPage()
@@ -32,9 +31,10 @@ class PDFCreator {
             addRecipeDescription(description: recipe.description)
             
             addLineSeparator(height: 0.5)
+            addSectionTitle(title: "Ingredients:")
             addBulletedText(text: recipe.ingredients)
             addLineSeparator(height: 0.5)
-            print("Offset Y before recipe steps: \(currentOffset.y)")
+            addSectionTitle(title: "Steps:")
             addBulletedText(text: recipe.steps)
         }
         
@@ -43,14 +43,34 @@ class PDFCreator {
     
     func addRecipeTitle(title: String) {
 
-        let fontName: String = "Avenir Next Condensed"
+        let fontName: String = "MarkerFelt-Wide"
         let defaultFont: UIFont = .systemFont(ofSize: 26.0)
         let font = UIFont(name: fontName, size: 26.0) ?? defaultFont
         let color = UIColor.black
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
-        let textAttributes = [NSAttributedString.Key.foregroundColor: color, NSAttributedString.Key.font: font, NSAttributedString.Key.paragraphStyle: paragraphStyle]
+        let textAttributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.foregroundColor: color, NSAttributedString.Key.font: font, NSAttributedString.Key.paragraphStyle: paragraphStyle]
+        let attributedString = NSMutableAttributedString(string: title, attributes: textAttributes)
+        
+        renderText(text: attributedString)
+    }
+    
+    func addSectionTitle(title: String) {
+        
+        
+        
+        let fontName: String = "MarkerFelt-Wide"
+        
+        let defaultFont: UIFont = .systemFont(ofSize: 12.0)
+        
+        
+        let font = UIFont(name: fontName, size: 12.0) ?? defaultFont
+        let color = UIColor.black
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .left
+        
+        let textAttributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.foregroundColor: color, NSAttributedString.Key.font: font, NSAttributedString.Key.paragraphStyle: paragraphStyle]
         let attributedString = NSMutableAttributedString(string: title, attributes: textAttributes)
         
         renderText(text: attributedString)
@@ -64,28 +84,36 @@ class PDFCreator {
     func addRecipeDescription(description: String) {
         
         // Setting the string settings
-        let fontName: String = "Avenir Next Condensed"
+        let fontName: String = "MarkerFelt-Thin"
         let defaultFont: UIFont = .systemFont(ofSize: 16.0)
         let font = UIFont(name: fontName, size: 16.0) ?? defaultFont
         let color = UIColor.black
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
-        let textAttributes = [NSAttributedString.Key.foregroundColor: color, NSAttributedString.Key.font: font, NSAttributedString.Key.paragraphStyle: paragraphStyle]
+        let textAttributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.foregroundColor: color, NSAttributedString.Key.font: font, NSAttributedString.Key.paragraphStyle: paragraphStyle]
         let attributedString = NSMutableAttributedString(string: description, attributes: textAttributes)
         
         renderText(text: attributedString)
+        
+//        let fontFamilyNames = CTFontManagerCopyAvailableFontFamilyNames()
+//
+//        print("avaialble fonts is \(fontFamilyNames)")
     }
     
     func addBulletedText(text: [String]) {
         
         // Setting the string settings
-        let fontName: String = "Avenir Next Condensed"
+        
+     
         let defaultFont: UIFont = .systemFont(ofSize: 12.0)
-        let font = UIFont(name: fontName, size: 12.0) ?? defaultFont
+        
+        let fontName : String = "MarkerFelt-Thin"
+        var font = UIFont(name: fontName, size: 12.0) ?? defaultFont
+        
         let color = UIColor.black
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .left
-        let textAttributes = [NSAttributedString.Key.foregroundColor: color, NSAttributedString.Key.font: font, NSAttributedString.Key.paragraphStyle: paragraphStyle]
+        let textAttributes: [NSAttributedString.Key: Any] = [NSAttributedString.Key.foregroundColor: color, NSAttributedString.Key.font: font, NSAttributedString.Key.paragraphStyle: paragraphStyle]
         let bullet: String = "\u{2022}"
         
         for i in 0...text.count - 1 {
@@ -93,6 +121,7 @@ class PDFCreator {
             let attributedString = NSMutableAttributedString(string: bulletedString, attributes: textAttributes)
             renderText(text: attributedString)
         }
+        
     }
     
     func renderText(text attributedString: NSMutableAttributedString) {
@@ -104,38 +133,65 @@ class PDFCreator {
         
         let context = UIGraphicsGetCurrentContext()!
         
-        let textMaxWidth = PDFCreator.pageRect.width - (2 * currentOffset.x)
-        let textMaxHeight = PDFCreator.pageRect.height - (2 * currentOffset.y)
         var currentRange = CFRange(location: 0, length: 0)
+        
   
         while (true) {
-        
+            
+            let textMaxWidth = printablePageRect.width
+            var textMaxHeight = PDFCreator.pageRect.height - currentOffset.y
+            var currentYCoordinate = PDFCreator.pageRect.height - currentOffset.y
+            
             context.saveGState()
             context.textMatrix = .identity
             context.translateBy(x: 0, y: PDFCreator.pageRect.size.height)
             context.scaleBy(x: 1.0, y: -1.0)
+            
         
-            let frameRect = CGRect(x: PDFCreator.margin, y: currentOffset.y, width: textMaxWidth, height: textMaxHeight)
-            let framePath = UIBezierPath(rect: frameRect).cgPath
+            var frameRect = CGRect(x: PDFCreator.margin, y: currentYCoordinate, width: textMaxWidth, height: textMaxHeight)
+            var framePath = UIBezierPath(rect: frameRect).cgPath
         
             let framesetter = CTFramesetterCreateWithAttributedString(attributedString as CFAttributedString)
     
         
-            let frame = CTFramesetterCreateFrame(framesetter, currentRange, framePath, nil)
-            CTFrameDraw(frame, context)
-            context.restoreGState()
-        
+            var frame = CTFramesetterCreateFrame(framesetter, currentRange, framePath, nil)
             let visibleRange = CTFrameGetVisibleStringRange(frame)
-            currentRange = CFRange(location: visibleRange.location + visibleRange.length, length: 0)
+            
+            currentRange = CFRange(location: visibleRange.location, length: visibleRange.length)
         
             let constraintSize = CGSize(width: textMaxWidth, height: textMaxHeight)
             let drawnSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, visibleRange, nil, constraintSize, nil)
             
-            currentOffset.y += drawnSize.height
+            
+            // Adjust frame size based on height of frame
+            if drawnSize.height < textMaxHeight {
+                textMaxHeight = drawnSize.height
+                currentOffset.y += textMaxHeight
+                currentYCoordinate = PDFCreator.pageRect.height - currentOffset.y
+            } else {
+                textMaxHeight = drawnSize.height
+                currentOffset.y = PDFCreator.margin + spacing
+                currentYCoordinate = PDFCreator.pageRect.height - currentOffset.y
+                UIGraphicsBeginPDFPage()
+            }
+            
+            
+//            else if (PDFCreator.pageRect.height - printablePageRect.height) < PDFCreator.margin {
+//
+//            }
+            
+            frameRect = CGRect(x: PDFCreator.margin, y: currentYCoordinate, width: textMaxWidth, height: textMaxHeight)
+            framePath = UIBezierPath(rect: frameRect).cgPath
+            frame = CTFramesetterCreateFrame(framesetter, currentRange, framePath, nil)
+            
+            CTFrameDraw(frame, context)
+            context.restoreGState()
             currentOffset.y += spacing
+            
+            
 
-            if currentRange.location == CFAttributedStringGetLength(attributedString) {
-                break
+            if currentRange.location <= CFAttributedStringGetLength(attributedString) {
+                return
             } else {
                 UIGraphicsBeginPDFPage()
                 currentOffset.y = PDFCreator.margin
@@ -158,7 +214,7 @@ class PDFCreator {
         
         let renderingXOffset: CGFloat = (PDFCreator.pageRect.width - aspectWidth) / 2
         
-        let renderingRect = CGRect(x: renderingXOffset, y: currentOffset.y, width: aspectWidth, height: aspectHeight)
+        let renderingRect = CGRect(x: renderingXOffset, y: currentOffset.y + spacing, width: aspectWidth, height: aspectHeight)
  
         image.draw(in: renderingRect)
         currentOffset.y = renderingRect.origin.y + renderingRect.height + spacing
@@ -170,7 +226,7 @@ class PDFCreator {
     
     func addLineSeparator(height: CGFloat) {
         currentOffset.y += spacing
-        let frameRect = CGRect(x: currentOffset.x + (PDFCreator.margin / 2), y: currentOffset.y, width: printablePageRect.width - PDFCreator.margin, height: height)
+        let frameRect = CGRect(x: currentOffset.x + PDFCreator.margin, y: currentOffset.y, width: printablePageRect.width, height: height)
         
         let path = UIBezierPath(roundedRect: frameRect, cornerRadius: 8.0).cgPath
         

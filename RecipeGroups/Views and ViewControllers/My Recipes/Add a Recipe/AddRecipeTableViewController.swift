@@ -65,6 +65,10 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     @IBOutlet weak var ingredientsImageView: UIImageView!
     @IBOutlet weak var stepImageView: UIImageView!
     
+    @IBOutlet weak var addImageLabel: UILabel!
+    @IBOutlet weak var ingredientsLabel: UILabel!
+    @IBOutlet weak var stepsLabel: UILabel!
+    
     let categoryPickerViewIndexPath = IndexPath(row: 1, section: 3)
     let cookingTimePickerViewIndexPath = IndexPath(row: 3, section: 3)
     let difficultyPickerViewIndexPath = IndexPath(row: 5, section: 3)
@@ -72,6 +76,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     let recipeImageIndexPath = IndexPath(row: 0, section: 0)
     let ingredientsIndexPath = IndexPath(row: 0, section: 4)
     let stepsIndexPath = IndexPath(row: 1, section: 4)
+    var recipeDict: [String: Any] = [:]
     
     var isCategoryPickerShown: Bool = false {
         didSet {
@@ -112,20 +117,27 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     }
     
     func setupView() {
-        let customColors = CustomColors()
         categoryPickerView.delegate = self
         categoryPickerView.dataSource = self
         cookingTimePickerView.delegate = self
         cookingTimePickerView.dataSource = self
         difficultyPickerView.delegate = self
         difficultyPickerView.dataSource = self
-        titleImageView.tintColor = customColors.customPink
-        descriptionImageView.tintColor = customColors.customPink
-        categoryImageView.tintColor = customColors.customPink
-        cookTimeImageView.tintColor = customColors.customPink
-        difficultyImageView.tintColor = customColors.customPink
-        ingredientsImageView.tintColor = customColors.customPink
-        stepImageView.tintColor = customColors.customPink
+        titleImageView.tintColor = CustomStyles.shared.customPink
+        descriptionImageView.tintColor = CustomStyles.shared.customPink
+        categoryImageView.tintColor = CustomStyles.shared.customPink
+        cookTimeImageView.tintColor = CustomStyles.shared.customPink
+        difficultyImageView.tintColor = CustomStyles.shared.customPink
+        ingredientsImageView.tintColor = CustomStyles.shared.customPink
+        stepImageView.tintColor = CustomStyles.shared.customPink
+        addImageLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        titleTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        descriptionTextView.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        categoryLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        cookingTimeLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        difficultyLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        ingredientsLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        stepsLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -306,5 +318,40 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
                 self.dismiss(animated: true, completion: nil)
             }
         }
+    }
+    
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        recipeDict.removeAll()
+        
+        if titleTextField.text != "" { recipeDict["title"] = titleTextField.text }
+        if descriptionTextView.text != "" && descriptionTextView.text != "Description" { recipeDict["description"] = descriptionTextView.text }
+        if categoryLabel.text != "Category" { recipeDict["category"] = categoryLabel.text }
+        if cookingTimeLabel.text != "Preparation Time" { recipeDict["cookingTime"] = cookingTimeLabel.text }
+        if difficultyLabel.text != "Difficulty" { recipeDict["difficulty"] = difficultyLabel.text }
+        if recipeImage != nil { recipeDict["recipeImage"] = recipeImage }
+        if ingredients != [""] { recipeDict["ingredients"] = ingredients }
+        if steps != [""] { recipeDict["steps"] = steps }
+        
+        coder.encode(recipeDict, forKey: "recipeDict")
+    }
+    
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        recipeDict.removeAll()
+        
+        recipeDict = coder.decodeObject(forKey: "recipeDict") as! [String: Any]
+    }
+    
+    func updateViewFrom(_ recipeDict: [String: Any]) {
+        let keys = recipeDict.keys
+        if keys.contains("title") { titleTextField.text = (recipeDict["title"] as! String) }
+        if keys.contains("description") { descriptionTextView.text = (recipeDict["description"] as! String) }
+        if keys.contains("category") { categoryLabel.text = (recipeDict["category"] as! String) }
+        if keys.contains("cookingTime") { cookingTimeLabel.text = (recipeDict["cookingTime"] as! String) }
+        if keys.contains("difficulty") { difficultyLabel.text = (recipeDict["difficulty"] as! String) }
+        if keys.contains("recipeImage") { recipeImage = (recipeDict["recipeImage"] as! UIImage) }
+        if keys.contains("ingredients") { ingredients = (recipeDict["ingredients"] as! [String]) }
+        if keys.contains("steps") { steps = (recipeDict["steps"] as! [String]) }
     }
 }

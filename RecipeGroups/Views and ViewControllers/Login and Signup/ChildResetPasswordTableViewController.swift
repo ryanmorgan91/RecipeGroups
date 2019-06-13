@@ -26,9 +26,10 @@ class ChildResetPasswordTableViewController: UITableViewController {
     }
 
     func setupView() {
-        let customColors = CustomColors()
-        emailImage.tintColor = customColors.customPink
+        let customSyles = CustomStyles()
+        emailImage.tintColor = customSyles.customPink
         self.tableView.backgroundColor = .clear
+        emailTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
     
     

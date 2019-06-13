@@ -26,8 +26,7 @@ class GroupNameTableViewCell: UITableViewCell {
     }
     
     func setupCell() {
-        let customColors = CustomColors()
-        groupImage.tintColor = customColors.customPink
+        groupImage.tintColor = CustomStyles.shared.customPink
     }
 
 }
