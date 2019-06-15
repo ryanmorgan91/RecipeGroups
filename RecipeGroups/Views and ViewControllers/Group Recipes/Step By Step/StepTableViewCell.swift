@@ -24,6 +24,7 @@ class StepTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         stepLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        stepLabel.textColor = UIColor.gray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

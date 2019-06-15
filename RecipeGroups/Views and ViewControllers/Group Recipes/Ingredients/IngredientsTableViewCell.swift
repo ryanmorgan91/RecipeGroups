@@ -18,6 +18,7 @@ class IngredientsTableViewCell: UITableViewCell {
         
         ingredientBullet.tintColor = CustomStyles.shared.customPink
         ingredientLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        ingredientLabel.textColor = UIColor.gray
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

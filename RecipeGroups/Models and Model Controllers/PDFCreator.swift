@@ -42,10 +42,9 @@ class PDFCreator {
     }
     
     func addRecipeTitle(title: String) {
-
-        let fontName: String = "MarkerFelt-Wide"
+        
         let defaultFont: UIFont = .systemFont(ofSize: 26.0)
-        let font = UIFont(name: fontName, size: 26.0) ?? defaultFont
+        let font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 26.0) ?? defaultFont
         let color = UIColor.black
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
@@ -58,14 +57,10 @@ class PDFCreator {
     
     func addSectionTitle(title: String) {
         
-        
-        
-        let fontName: String = "MarkerFelt-Wide"
-        
         let defaultFont: UIFont = .systemFont(ofSize: 12.0)
         
         
-        let font = UIFont(name: fontName, size: 12.0) ?? defaultFont
+        let font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 12.0) ?? defaultFont
         let color = UIColor.black
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .left
@@ -84,9 +79,8 @@ class PDFCreator {
     func addRecipeDescription(description: String) {
         
         // Setting the string settings
-        let fontName: String = "MarkerFelt-Thin"
         let defaultFont: UIFont = .systemFont(ofSize: 16.0)
-        let font = UIFont(name: fontName, size: 16.0) ?? defaultFont
+        let font = UIFont(name: CustomStyles.shared.customFontName, size: 16.0) ?? defaultFont
         let color = UIColor.black
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
@@ -106,9 +100,7 @@ class PDFCreator {
         
      
         let defaultFont: UIFont = .systemFont(ofSize: 12.0)
-        
-        let fontName : String = "MarkerFelt-Thin"
-        var font = UIFont(name: fontName, size: 12.0) ?? defaultFont
+        let font = UIFont(name: CustomStyles.shared.customFontName, size: 12.0) ?? defaultFont
         
         let color = UIColor.black
         let paragraphStyle = NSMutableParagraphStyle()

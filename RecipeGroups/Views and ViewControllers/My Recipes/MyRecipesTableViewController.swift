@@ -103,17 +103,15 @@ extension MyRecipesTableViewController: SideMenuDelegate {
     func userTapped(menuButton: String) {
         switch menuButton {
         case "Logout":
-            if UserController.shared.user?.name == "Ryan" {
-                self.performSegue(withIdentifier: "SignOutFromMyRecipes", sender: nil)
-            }
-            
             UserController.shared.logoutUser {
                 self.performSegue(withIdentifier: "SignOutFromMyRecipes", sender: nil)
             }
         case "My Groups":
-            self.performSegue(withIdentifier: "SegueFromMyRecipesToMyGroups", sender: nil)
+            if let viewController = storyboard?.instantiateViewController(withIdentifier: "MyGroupsTableViewController") as? MyGroupsTableViewController {
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
         case "Recipes":
-            self.performSegue(withIdentifier: "SegueFromMyRecipesToRecipes", sender: nil)
+            self.navigationController?.popToRootViewController(animated: true)
         default:
             break
         }

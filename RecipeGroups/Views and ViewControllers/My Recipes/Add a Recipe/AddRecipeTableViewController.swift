@@ -341,6 +341,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         recipeDict.removeAll()
         
         recipeDict = coder.decodeObject(forKey: "recipeDict") as! [String: Any]
+        updateViewFrom(recipeDict)
     }
     
     func updateViewFrom(_ recipeDict: [String: Any]) {

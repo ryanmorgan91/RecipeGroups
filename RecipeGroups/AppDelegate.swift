@@ -33,7 +33,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        print("Test 1")
         if let user = UserController.shared.loadUser() {
+            print("Test: \(user.name)")
             UserController.shared.updateUser(name: user.name, email: user.email)
         }
         return true

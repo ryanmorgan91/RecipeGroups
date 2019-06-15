@@ -142,6 +142,8 @@ class RecipeDetailViewController: UIViewController {
         ingredientsButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 18)
         stepsButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 18)
         likeButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 17)
+        descriptionLabel.textColor = UIColor.gray
+        
         
         if let isLiked = recipe.isLiked {
             likeButton.isSelected = isLiked
@@ -167,9 +169,7 @@ class RecipeDetailViewController: UIViewController {
         let shareAction = UIAlertAction(title: "Share as PDF", style: .default) { (_) in
             guard let recipe = self.recipe else { return }
             let pdfData = PDFCreator.shared.createPDFFromRecipe(recipe: recipe)
-            let pdfDocument = PDFDocument(data: pdfData)
-    
-            let activityController = UIActivityViewController(activityItems: [pdfDocument as Any], applicationActivities: nil)
+            let activityController = UIActivityViewController(activityItems: [pdfData as Data], applicationActivities: nil)
             
             // On iPads, a UIActivityController is presented inside of a popover
             activityController.popoverPresentationController?.sourceView = self.view

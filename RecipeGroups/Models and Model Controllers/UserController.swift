@@ -166,8 +166,8 @@ class UserController {
         let userFileURL = documentsDirectoryURL.appendingPathComponent("user").appendingPathExtension("json")
         guard let data = try? Data(contentsOf: userFileURL) else { return nil }
         let jsonDecoder = JSONDecoder()
-        if let user = try? jsonDecoder.decode([User].self, from: data) {
-            return user.last
+        if let user = try? jsonDecoder.decode(User.self, from: data) {
+            return user
         }
         return nil
     }

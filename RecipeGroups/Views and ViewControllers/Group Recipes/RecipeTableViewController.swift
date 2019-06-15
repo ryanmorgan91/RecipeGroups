@@ -51,7 +51,6 @@ class RecipeTableViewController: UITableViewController {
         tableView.separatorStyle = .none
         tableView.rowHeight = 200
         navigationItem.leftBarButtonItem?.tintColor = CustomStyles.shared.customPink
-        
     }
     
     @objc func updateUI() {
@@ -102,17 +101,18 @@ extension RecipeTableViewController: SideMenuDelegate {
     func userTapped(menuButton: String) {
         switch menuButton {
         case "Logout":
-            if UserController.shared.user?.name == "Ryan" {
-                self.performSegue(withIdentifier: "SignOutFromRecipeTableView", sender: nil)
-            }
-            
             UserController.shared.logoutUser {
                 self.performSegue(withIdentifier: "SignOutFromRecipeTableView", sender: nil)
             }
         case "My Groups":
-            self.performSegue(withIdentifier: "SegueFromRecipesToMyGroups", sender: nil)
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            if let viewController = storyboard?.instantiateViewController(withIdentifier: "MyGroupsTableViewController") as? MyGroupsTableViewController {
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
         case "My Recipes":
-            self.performSegue(withIdentifier: "SegueFromRecipesToMyRecipes", sender: nil)
+            if let viewController = storyboard?.instantiateViewController(withIdentifier: "MyRecipesTableViewController") as? MyRecipesTableViewController {
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
         default:
             break
         }

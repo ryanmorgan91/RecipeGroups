@@ -110,9 +110,11 @@ extension MyGroupsTableViewController: SideMenuDelegate {
                 self.performSegue(withIdentifier: "SignOutFromMyGroups", sender: nil)
             }
         case "Recipes":
-            performSegue(withIdentifier: "SegueFromMyGroupsToRecipes", sender: nil)
+            self.navigationController?.popToRootViewController(animated: true)
         case "My Recipes":
-            performSegue(withIdentifier: "SegueFromMyGroupsToMyRecipes", sender: nil)
+            if let viewController = storyboard?.instantiateViewController(withIdentifier: "MyRecipesTableViewController") as? MyRecipesTableViewController {
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
         default:
             break
         }
