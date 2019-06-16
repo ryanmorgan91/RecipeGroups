@@ -11,32 +11,36 @@ import Foundation
 class UserController {
     
     static let shared = UserController()
-    
     var user: User?
-    
-    let baseURL = RecipeController.shared.baseURL
+    let baseURL = Secret.shared.baseURL
     
     func updateUser(name: String, email: String) {
         self.user = User(name: name, email: email)
         
-        /* To turn off networking and use samples instead, commenting the following and uncomment the rows below */
-//        RecipeController.shared.fetchRecipes()
-//        GroupController.shared.fetchGroups()
         
-        RecipeController.shared.recipes = Recipe.loadSampleRecipes()
-        RecipeController.shared.process(recipes: RecipeController.shared.recipes)
-//        GroupController.shared.groups = Group.loadSampleGroups()
+         
+        RecipeController.shared.fetchRecipes()
+        GroupController.shared.fetchGroups()
+    
+        /* To turn off networking and use samples instead, uncommenting the following and comment the lines above 
+         
+        GroupController.shared.groups = Group.loadSampleGroups()
+         
+        */
         
-        
-        /* Use the following to send sample recipes to the server */
-//        let recipes = Recipe.loadSampleRecipes()
-//        for recipe in recipes {
-//            RecipeController.shared.sendRecipe(recipe: recipe) {
-//                //
-//            }
-//        }
+        /* Use the following to send sample recipes to the server
+         
+            let recipes = Recipe.loadSampleRecipes()
+            for recipe in recipes {
+                RecipeController.shared.sendRecipe(recipe: recipe) {
+                    //
+                }
+            }
+         
+        */
     }
     
+    // Send a request to the server to login the user
     func loginUser(email: String, password: String, completionHandler: @escaping (Bool) -> ()) {
         let sentData: [String: String] = [
             "email": email,
@@ -51,23 +55,12 @@ class UserController {
         let jsonData = try? jsonEncoder.encode(sentData)
         request.httpBody = jsonData
         
-        // To DO: Handle already logged in users
-        
-        // Temporary backdoor
-        if email == "johnsmith@example.com" && password == "backdoor" {
-            updateUser(name: "John", email: "johnsmith@example.com")
-            DispatchQueue.main.async {
-                completionHandler(true)
-            }
-            return
-        }
-        
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             let jsonDecoder = JSONDecoder()
             if let data = data,
                 let result = try? jsonDecoder.decode([String: String].self, from: data) {
                 if result["Success"] == "true" || result["Success"] == "User is already logged in" {
-                    print(result)
+                    
                     if let name = result["Name"],
                         let email = result["Email"] {
                         self.updateUser(name: name, email: email)
@@ -152,6 +145,7 @@ class UserController {
         task.resume()
     }
     
+    // For state restoration
     func saveUser() {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let userFileURL = documentsDirectoryURL.appendingPathComponent("user").appendingPathExtension("json")
@@ -161,6 +155,7 @@ class UserController {
         }
     }
    
+    // For state restoration
     func loadUser() -> User? {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let userFileURL = documentsDirectoryURL.appendingPathComponent("user").appendingPathExtension("json")

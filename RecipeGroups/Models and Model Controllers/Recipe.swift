@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 final class Recipe: Codable {
+    
     var name: String
     var image: UIImage?
     var imageURL: URL?
@@ -115,7 +116,7 @@ final class Recipe: Codable {
         self.author = author
     }
     
-    
+    // Sample recipes for development and testing
     static func loadSampleRecipes() -> [Recipe] {
         let macaronSteps = [
             "Make the macarons: In the bowl of a food processor, combine the powdered sugar, almond flour, and ½ teaspoon of salt, and process on low speed, until extra fine. Sift the almond flour mixture through a fine-mesh sieve into a large bowl",
@@ -246,6 +247,4 @@ final class Recipe: Codable {
         
         return [macarons, raspberryCheesecake, cherryPie, tiramisu, birthdayCakeFudge]
     }
-    
-    
 }

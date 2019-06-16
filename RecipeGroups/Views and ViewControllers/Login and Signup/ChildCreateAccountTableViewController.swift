@@ -9,7 +9,6 @@
 import UIKit
 
 class ChildCreateAccountTableViewController: UITableViewController {
-
     
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
@@ -19,6 +18,10 @@ class ChildCreateAccountTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupView()
+    }
+    
+    func setupView() {
         self.tableView.contentInset = .zero
         firstPasswordTextField.isSecureTextEntry = true
         firstPasswordTextField.textContentType = .newPassword
@@ -33,15 +36,13 @@ class ChildCreateAccountTableViewController: UITableViewController {
         emailTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         firstPasswordTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         secondPasswordTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
-        
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        // Create reference to parentViewController when viewDidAppear
         let parentViewController = self.parent as! CreateAccountViewController
         parentViewController.createReference(to: self)
     }
- 
-   
 }

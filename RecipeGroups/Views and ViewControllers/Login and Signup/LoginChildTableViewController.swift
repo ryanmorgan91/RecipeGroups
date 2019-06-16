@@ -45,5 +45,4 @@ class LoginChildTableViewController: UITableViewController {
         
         self.tableView.backgroundColor = .clear
     }
-    
 }

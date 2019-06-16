@@ -18,9 +18,7 @@ class IntroViewController: UIViewController {
         setupView()
     }
     
-    
     func setupView() {
-        
         signUpButton.backgroundColor = CustomStyles.shared.customPink
         signUpButton.setTitleColor(.white, for: .normal)
         signUpButton.layer.cornerRadius = 10
@@ -29,7 +27,4 @@ class IntroViewController: UIViewController {
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         navigationController?.navigationBar.shadowImage = UIImage()
     }
-    
-
-
 }

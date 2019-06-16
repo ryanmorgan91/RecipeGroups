@@ -20,11 +20,4 @@ class IngredientsTableViewCell: UITableViewCell {
         ingredientLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         ingredientLabel.textColor = UIColor.gray
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

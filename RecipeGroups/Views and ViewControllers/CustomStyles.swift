@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+// This class makes it easily to make global changes to stylistic aspects of the app
 class CustomStyles {
     static let shared = CustomStyles()
     

@@ -19,7 +19,6 @@ class PDFCreator {
     let spacing: CGFloat = 10
     var currentOffset = CGPoint(x: 0, y: PDFCreator.margin + 10)
     
-    // Creates a PDF based on a custom type "Recipe"
     // Returns PDF as Data, which can be shown in a PDFKit PDFViewer
     func createPDFFromRecipe(recipe: Recipe) -> Data {
         currentOffset = CGPoint(x: 0, y: PDFCreator.margin)
@@ -88,20 +87,13 @@ class PDFCreator {
         let attributedString = NSMutableAttributedString(string: description, attributes: textAttributes)
         
         renderText(text: attributedString)
-        
-//        let fontFamilyNames = CTFontManagerCopyAvailableFontFamilyNames()
-//
-//        print("avaialble fonts is \(fontFamilyNames)")
     }
     
     func addBulletedText(text: [String]) {
         
-        // Setting the string settings
-        
-     
+        // Setting the font and string settings
         let defaultFont: UIFont = .systemFont(ofSize: 12.0)
         let font = UIFont(name: CustomStyles.shared.customFontName, size: 12.0) ?? defaultFont
-        
         let color = UIColor.black
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .left
@@ -117,16 +109,15 @@ class PDFCreator {
     }
     
     func renderText(text attributedString: NSMutableAttributedString) {
+        // Check if current drawing point is past the printable page area
         if currentOffset.y > printablePageRect.height {
             UIGraphicsBeginPDFPage()
             currentOffset.y = PDFCreator.margin
         }
-        print("Render text current y offset: \(currentOffset.y)")
         
+        // Get the current range and graphics context
         let context = UIGraphicsGetCurrentContext()!
-        
         var currentRange = CFRange(location: 0, length: 0)
-        
   
         while (true) {
             
@@ -139,13 +130,11 @@ class PDFCreator {
             context.translateBy(x: 0, y: PDFCreator.pageRect.size.height)
             context.scaleBy(x: 1.0, y: -1.0)
             
-        
             var frameRect = CGRect(x: PDFCreator.margin, y: currentYCoordinate, width: textMaxWidth, height: textMaxHeight)
             var framePath = UIBezierPath(rect: frameRect).cgPath
         
             let framesetter = CTFramesetterCreateWithAttributedString(attributedString as CFAttributedString)
     
-        
             var frame = CTFramesetterCreateFrame(framesetter, currentRange, framePath, nil)
             let visibleRange = CTFrameGetVisibleStringRange(frame)
             
@@ -154,8 +143,7 @@ class PDFCreator {
             let constraintSize = CGSize(width: textMaxWidth, height: textMaxHeight)
             let drawnSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, visibleRange, nil, constraintSize, nil)
             
-            
-            // Adjust frame size based on height of frame
+            // If the suggested frame size is greater than the area left on the current page, begin a new pdf page
             if drawnSize.height < textMaxHeight {
                 textMaxHeight = drawnSize.height
                 currentOffset.y += textMaxHeight
@@ -166,12 +154,7 @@ class PDFCreator {
                 currentYCoordinate = PDFCreator.pageRect.height - currentOffset.y
                 UIGraphicsBeginPDFPage()
             }
-            
-            
-//            else if (PDFCreator.pageRect.height - printablePageRect.height) < PDFCreator.margin {
-//
-//            }
-            
+
             frameRect = CGRect(x: PDFCreator.margin, y: currentYCoordinate, width: textMaxWidth, height: textMaxHeight)
             framePath = UIBezierPath(rect: frameRect).cgPath
             frame = CTFramesetterCreateFrame(framesetter, currentRange, framePath, nil)
@@ -180,8 +163,6 @@ class PDFCreator {
             context.restoreGState()
             currentOffset.y += spacing
             
-            
-
             if currentRange.location <= CFAttributedStringGetLength(attributedString) {
                 return
             } else {
@@ -192,7 +173,6 @@ class PDFCreator {
     }
     
     func renderImage(image: UIImage) {
-        print("Current offset y for image: \(currentOffset.y)")
         
         let maxImageWidth: CGFloat = 300
         let maxImageHeight: CGFloat = 200
@@ -210,10 +190,6 @@ class PDFCreator {
  
         image.draw(in: renderingRect)
         currentOffset.y = renderingRect.origin.y + renderingRect.height + spacing
-        
-        print("Image y origin: \(renderingRect.origin.y)")
-        print("Image height: \(renderingRect.height)")
-        print("Image y end: \(renderingRect.maxY)")
     }
     
     func addLineSeparator(height: CGFloat) {
@@ -229,6 +205,5 @@ class PDFCreator {
         context.addPath(path)
         context.drawPath(using: .fillStroke)
         currentOffset.y += height + (spacing * 2)
-        
     }
 }

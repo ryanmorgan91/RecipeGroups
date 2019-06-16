@@ -16,13 +16,12 @@ class MyRecipesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Add observer for recipe data changing (i.e., server has returned recipe data)
         NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: RecipeController.recipeDataUpdatedNotification, object: nil)
         
         setupView()
         updateUI()
-        
     }
-    
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         return recipes.count
@@ -32,18 +31,17 @@ class MyRecipesTableViewController: UITableViewController {
         return 1
     }
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as! MyRecipesTableViewCell
         
-        /* Comment the following to add sample images */
-//        configure(cell, forItemAt: indexPath)
+        /* Comment the following if using sample recipes */
+        configure(cell, forItemAt: indexPath)
         
         /* comment the following to remove sample images */
         
-        let recipe = recipes[indexPath.section]
-        cell.recipeLabel.text = recipe.name
-        cell.recipeImage.image = recipe.image
+//        let recipe = recipes[indexPath.section]
+//        cell.recipeLabel.text = recipe.name
+//        cell.recipeImage.image = recipe.image
         
         return cell
     }
@@ -55,7 +53,6 @@ class MyRecipesTableViewController: UITableViewController {
     }
     
     @objc func updateUI() {
-        print("update UI test")
         self.recipes = RecipeController.shared.recipes.filter({ $0.author == UserController.shared.user!.email })
         if let likedRecipes = RecipeController.shared.loadLikedRecipes() {
             self.recipes += likedRecipes
@@ -74,17 +71,21 @@ class MyRecipesTableViewController: UITableViewController {
                     return
                 }
                 cell.recipeImage.image = image
+                recipe.image = image
                 cell.setNeedsLayout()
             }
         }
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
         cell.contentView.layer.masksToBounds = true
         
     }
     
+    /*
+    * If the segue is for the MenuViewController, set up the necessary properties and delegation patterns,
+    *    otherwise, pass the selected recipe to RecipeDetailViewController
+    */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destinationViewController = segue.destination as? MenuViewController {
             destinationViewController.transitioningDelegate = self
@@ -99,6 +100,7 @@ class MyRecipesTableViewController: UITableViewController {
     }
 }
 
+// Either perform the logout segue (if user tapped "logout"), or push the corresponding view controller onto the navigation stack
 extension MyRecipesTableViewController: SideMenuDelegate {
     func userTapped(menuButton: String) {
         switch menuButton {
@@ -115,10 +117,10 @@ extension MyRecipesTableViewController: SideMenuDelegate {
         default:
             break
         }
-        
     }
 }
 
+// Implement the side menu transitioning delegate patterns
 extension MyRecipesTableViewController: UIViewControllerTransitioningDelegate {
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {

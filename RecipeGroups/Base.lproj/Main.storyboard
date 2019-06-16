@@ -115,7 +115,7 @@
                                     <constraint firstAttribute="trailing" secondItem="OUL-cX-OBN" secondAttribute="trailing" id="kkv-wt-IKN"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eYl-dv-t08" customClass="CustomSwitchView" customModule="RecipeGroups" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eYl-dv-t08">
                                 <rect key="frame" x="57" y="563.5" width="300" height="50"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Base" translatesAutoresizingMaskIntoConstraints="NO" id="dWI-LP-Nz8">
@@ -235,7 +235,7 @@
                         <outlet property="likeButton" destination="vjk-kI-Rmc" id="wbC-pi-VEu"/>
                         <outlet property="recipeCookTimeLabel" destination="5Gm-We-rms" id="8HC-o8-QY1"/>
                         <outlet property="recipeImage" destination="OUL-cX-OBN" id="Q9h-6D-OeV"/>
-                        <outlet property="recipeSwitch" destination="eYl-dv-t08" id="s8r-0I-09b"/>
+                        <outlet property="recipeSwitch" destination="eYl-dv-t08" id="res-2s-WcQ"/>
                         <outlet property="recipeTitleLabel" destination="Eyp-E0-lzR" id="mtT-gO-9E7"/>
                         <outlet property="stepsButton" destination="pjm-FW-sXl" id="Sw5-mc-xeg"/>
                         <outlet property="switchActiveImage" destination="NdO-vH-SUM" id="rM8-Ze-3DI"/>
@@ -253,7 +253,7 @@
             <objects>
                 <tableViewController id="9rp-Lo-rFg" customClass="LoginChildTableViewController" customModule="RecipeGroups" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="plain" rowHeight="62" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="jen-Ib-GP0">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="150"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
@@ -770,7 +770,6 @@
                 <navigationController restorationIdentifier="RecipeGroupsNav" automaticallyAdjustsScrollViewInsets="NO" id="yBZ-wg-Q4y" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="o8r-My-G9g">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="26"/>
@@ -889,7 +888,7 @@
             <objects>
                 <tableViewController restorationIdentifier="ChildCreateAccountTableViewController" id="nlL-Bz-Cc0" customClass="ChildCreateAccountTableViewController" customModule="RecipeGroups" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="2Qy-M7-BKS">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="248"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <sections>
@@ -1128,7 +1127,7 @@
             <objects>
                 <tableViewController restorationIdentifier="ChildIngredientsTableViewController" storyboardIdentifier="ChildIngredients" id="7Gg-Wz-lKN" customClass="ChildIngredientsTableViewController" customModule="RecipeGroups" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="3wL-8O-vHz">
-                        <rect key="frame" x="0.0" y="0.0" width="374" height="242"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
@@ -1476,6 +1475,7 @@
                                                     <rect key="frame" x="61" y="0.0" width="353" height="149.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <string key="text">
+
 
 Description</string>
                                                     <fontDescription key="fontDescription" name="AvenirNextCondensed-Regular" family="Avenir Next Condensed" pointSize="20"/>
@@ -2086,7 +2086,6 @@ Description</string>
                 <navigationController restorationIdentifier="LoginNav" automaticallyAdjustsScrollViewInsets="NO" id="Fph-eK-BCQ" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="6na-bp-uXi">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="26"/>
@@ -2108,7 +2107,6 @@ Description</string>
                 <navigationController restorationIdentifier="CreateAccountNav" automaticallyAdjustsScrollViewInsets="NO" id="3Uc-ss-ROZ" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="QWe-ke-fL2">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="26"/>
@@ -2130,7 +2128,6 @@ Description</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="v4N-CN-BUb" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="fui-2s-BJK">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="26"/>
@@ -2381,11 +2378,9 @@ Description</string>
         <!--Navigation Controller-->
         <scene sceneID="X5e-G7-iPk">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="d1w-id-c4V" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController restorationIdentifier="AddRecipeNav" automaticallyAdjustsScrollViewInsets="NO" id="EdL-3R-cMe" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bsq-yq-ecc">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="26"/>
@@ -2400,6 +2395,7 @@ Description</string>
                         <segue destination="v5h-vv-kzc" kind="relationship" relationship="rootViewController" id="Nrh-eG-lZW"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d1w-id-c4V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5168" y="3240"/>
         </scene>
@@ -2409,7 +2405,6 @@ Description</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="4gk-8F-VXJ" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="6DF-4Z-0bd">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="26"/>

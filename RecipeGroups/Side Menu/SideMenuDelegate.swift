@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Protocol to notify delegate which menu item was tapped
 protocol SideMenuDelegate: AnyObject {
     func userTapped(menuButton: String)
 }

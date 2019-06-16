@@ -16,8 +16,6 @@ enum Direction {
     case right
 }
 
-// TO DO: Do I really need up and down? See above and below
-
 struct MenuHelper {
     static let menuWidth: CGFloat = 0.8
     static let percentThreshold: CGFloat = 0.3

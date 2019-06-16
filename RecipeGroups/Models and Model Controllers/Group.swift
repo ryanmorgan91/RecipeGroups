@@ -9,19 +9,17 @@
 import Foundation
 
 final class Group: Codable {
+    
+    // Does not store password in the app.  Only stores as encrypted in database.
+    // We never have access to users passwords
     var name: String
-    // To Do: Check if password is needed here and whether I need to encrypt it
-//    var password: String
     var creator: String
     var members: [String]
-//    var recipes: [Recipe]
     
     init(name: String, creator: String, members: [String]) {
         self.name = name
         self.creator = creator
         self.members = members
-//        self.password = password
-//        self.recipes = recipes
     }
     
     enum CodingKeys: String, CodingKey {
@@ -37,6 +35,7 @@ final class Group: Codable {
         self.members = try container.decode([String].self, forKey: CodingKeys.members)
     }
     
+    // Sample groups for development and testing
     static func loadSampleGroups() -> [Group] {
         let group = Group(name: "Sample Group", creator: "johnsmith@example.com", members: ["johnsmith@example.com"])
         return [group]

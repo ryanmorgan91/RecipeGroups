@@ -20,8 +20,6 @@ class MyGroupsTableViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: GroupController.groupDataUpdatedNotification, object: nil)
         
         updateUI()
-        
-//        loadGroups()
         setupView()
     }
     
@@ -62,12 +60,6 @@ class MyGroupsTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem?.tintColor = CustomStyles.shared.customPink
     }
     
-//    func loadGroups() {
-//        // if ...
-//
-//        groups = Group.loadSampleGroups()
-//    }
-    
     @IBAction func menuButtonTapped(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: "openMenuFromMyGroups", sender: nil)
     }
@@ -83,7 +75,6 @@ class MyGroupsTableViewController: UITableViewController {
             destinationViewController.group = groups[index]
         }
     }
-    
     
     @IBAction func plusButtonTapped(_ sender: UIBarButtonItem) {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)

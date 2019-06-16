@@ -16,7 +16,6 @@ class AddIngredientsTableViewController: UITableViewController {
         super.viewDidLoad()
 
         self.navigationItem.rightBarButtonItem = editButtonItem
-
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -31,10 +30,8 @@ class AddIngredientsTableViewController: UITableViewController {
         cell.ingredientTextField.text = ingredients[indexPath.row]
         return cell
     }
-    
 
-  
-    // Override to support conditional editing of the table view.
+    // Support conditional editing of the table view for the first section only
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 1 {
             return false
@@ -43,6 +40,7 @@ class AddIngredientsTableViewController: UITableViewController {
         }
     }
     
+    // Allow insert if section = 0, else allow delete
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         if indexPath == IndexPath(row: 0, section: 0) {
             return .insert
@@ -56,7 +54,7 @@ class AddIngredientsTableViewController: UITableViewController {
             ingredients.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
-            ingredients.insert("test", at: ingredients.count - 1)
+            ingredients.insert("", at: ingredients.count - 1)
             tableView.insertRows(at: [IndexPath(row: ingredients.count - 1, section: 0)], with: .automatic)
         }
     }
@@ -78,33 +76,29 @@ class AddIngredientsTableViewController: UITableViewController {
                 counter += 1
             }
         }
-        
-        print(ingredients)
     }
     
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        
+        var counter = 0
+        
+        for i in 0 ... ingredients.count - 1 {
+            let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0)) as! AddIngredientTableViewCell
+            let ingredient = cell.ingredientTextField.text ?? ""
+            if ingredient != "" {
+                self.ingredients[counter] = ingredient
+                counter += 1
+            }
+        }
+        
+        coder.encode(ingredients, forKey: "IngredientsKey")
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        
+        ingredients = coder.decodeObject(forKey: "IngredientsKey") as! [String]
+        tableView.reloadData()
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

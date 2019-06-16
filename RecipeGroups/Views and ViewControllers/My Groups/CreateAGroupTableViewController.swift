@@ -10,7 +10,6 @@ import UIKit
 
 class CreateAGroupTableViewController: UITableViewController {
 
-    
     @IBOutlet weak var groupImage: UIImageView!
     @IBOutlet weak var groupNameTextField: UITextField!
     @IBOutlet weak var passwordImage: UIImageView!
@@ -23,10 +22,10 @@ class CreateAGroupTableViewController: UITableViewController {
 
         setupView()
     }
-
-
     
     @IBAction func createGroupButtonTapped(_ sender: UIBarButtonItem) {
+        
+        // Check if form has been correctly filled in
         guard groupNameTextField.text != "" else { return }
         guard passwordTextField.text != "" else { return }
         guard passwordTextField.text == reenterPasswordTextField.text else {
@@ -40,6 +39,8 @@ class CreateAGroupTableViewController: UITableViewController {
         let groupName = groupNameTextField.text!
         let password = passwordTextField.text!
         
+        
+        // Send a create group request to the server
         GroupController.shared.createGroup(named: groupName, withPassword: password) { (result) in
             if result == "Success" {
                 GroupController.shared.processNewGroup(named: groupName)

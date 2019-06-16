@@ -11,6 +11,9 @@
 # Icon must end with two \r
 Icon
 
+# My additions
+RecipeGroups/Secret.swift
+
 # Thumbnails
 ._*
 

@@ -12,7 +12,6 @@ class ChildMenuTableViewController: UITableViewController {
 
     weak var delegate: SideMenuDelegate?
  
-    
     @IBOutlet weak var recipesButton: UIButton!
     @IBOutlet weak var myGroupsButton: UIButton!
     @IBOutlet weak var myRecipesButton: UIButton!
@@ -35,21 +34,23 @@ class ChildMenuTableViewController: UITableViewController {
         logoutButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
     
+    // Notify the delegate when user taps Recipes button
     @IBAction func recipesButtonTapped(_ sender: UIButton) {
         delegate?.userTapped(menuButton: "Recipes")
     }
     
+    // Notify the delegate when user taps My Groups button
     @IBAction func myGroupsButtonTapped(_ sender: Any) {
         delegate?.userTapped(menuButton: "My Groups")
     }
     
+    // Notify the delegate when user taps My Recipes button
     @IBAction func myRecipesButtonTapped(_ sender: Any) {
         delegate?.userTapped(menuButton: "My Recipes")
     }
     
-    
+    // Notify the delegate when user taps Logout button
     @IBAction func logoutButtonTapped(_ sender: Any) {
         delegate?.userTapped(menuButton: "Logout")
     }
-    
 }

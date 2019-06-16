@@ -10,6 +10,7 @@ import UIKit
 
 class CellBackgroundView: UIView {
     
+    // Add corner radius when bounds is set
     override var bounds: CGRect {
         didSet {
             setupBackgroundView()

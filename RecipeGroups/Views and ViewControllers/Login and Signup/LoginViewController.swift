@@ -29,7 +29,7 @@ class LoginViewController: UIViewController {
         guard let emailTextField = childViewController?.emailTextField else { return }
         guard let passwordTextField = childViewController?.passwordTextField else { return }
         
-        
+        // Animate the text fields if the user left them blank
         if emailTextField.text == "" {
             animateTextField(textField: emailTextField)
             return
@@ -43,8 +43,8 @@ class LoginViewController: UIViewController {
         let activityIndicatorBackground = displayActivityIndicator(onView: self.view)
         
         UserController.shared.loginUser(email: email, password: password) { (success) in
-            
             self.removeActivityIndicator(activityBackgroundView: activityIndicatorBackground)
+            
             if success {
                 self.performSegue(withIdentifier: "segueToMainVC", sender: nil)
             } else {
@@ -57,18 +57,17 @@ class LoginViewController: UIViewController {
     }
     
     func setupView() {
-        
         loginButton.backgroundColor = .white
         loginButton.setTitleColor(CustomStyles.shared.customPink, for: .normal)
         loginButton.layer.cornerRadius = 10
         loginButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 24)
         forgotPasswordLabel.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         createAccountLabel.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
-        
     }
     
+    // First scale and translate the textField, then undo transformation
     func animateTextField(textField: UITextField) {
-    
+        
         UIView.animate(withDuration: 0.3, animations: {
             let scaleTransform = CGAffineTransform(scaleX: 1.1, y: 1.1)
             let translateTransform = CGAffineTransform(translationX: -20, y: 0)

@@ -19,7 +19,7 @@
 		9D540D242288F4F20090B7D2 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D540D232288F4F20090B7D2 /* Recipe.swift */; };
 		9D540D262288FBDA0090B7D2 /* ShadowCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D540D252288FBDA0090B7D2 /* ShadowCellView.swift */; };
 		9D540D462289FE5F0090B7D2 /* RecipeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D540D452289FE5F0090B7D2 /* RecipeDetailViewController.swift */; };
-		9D540D482289FEE80090B7D2 /* CustomSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D540D472289FEE80090B7D2 /* CustomSwitchView.swift */; };
+		9D54DF7622B5C7F60098FE0D /* Secret.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D54DF7522B5C7F60098FE0D /* Secret.swift */; };
 		9D866F5422A1BC7300D783DA /* CreateAGroupTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D866F5322A1BC7300D783DA /* CreateAGroupTableViewController.swift */; };
 		9D866F5622A1DDA100D783DA /* JoinGroupTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D866F5522A1DDA100D783DA /* JoinGroupTableViewController.swift */; };
 		9D866F5822A1EA9F00D783DA /* PDFCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D866F5722A1EA9F00D783DA /* PDFCreator.swift */; };
@@ -78,7 +78,7 @@
 		9D540D232288F4F20090B7D2 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		9D540D252288FBDA0090B7D2 /* ShadowCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowCellView.swift; sourceTree = "<group>"; };
 		9D540D452289FE5F0090B7D2 /* RecipeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDetailViewController.swift; sourceTree = "<group>"; };
-		9D540D472289FEE80090B7D2 /* CustomSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitchView.swift; sourceTree = "<group>"; };
+		9D54DF7522B5C7F60098FE0D /* Secret.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secret.swift; sourceTree = "<group>"; };
 		9D866F5322A1BC7300D783DA /* CreateAGroupTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAGroupTableViewController.swift; sourceTree = "<group>"; };
 		9D866F5522A1DDA100D783DA /* JoinGroupTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinGroupTableViewController.swift; sourceTree = "<group>"; };
 		9D866F5722A1EA9F00D783DA /* PDFCreator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFCreator.swift; sourceTree = "<group>"; };
@@ -154,7 +154,9 @@
 		9D540D072288EFD00090B7D2 /* RecipeGroups */ = {
 			isa = PBXGroup;
 			children = (
+				9D54DF7522B5C7F60098FE0D /* Secret.swift */,
 				9DEE6E3F228B3CD100D1817B /* Views and ViewControllers */,
+				9DF6B3B2228D42C60089F954 /* Side Menu */,
 				9DF6B3C1228DEE640089F954 /* Models and Model Controllers */,
 				9D540D082288EFD00090B7D2 /* AppDelegate.swift */,
 				9D540D0C2288EFD00090B7D2 /* Main.storyboard */,
@@ -181,8 +183,6 @@
 				9DF6B3D6228F410A0089F954 /* CellBackgroundView.swift */,
 				9D4BBCAC228A10480036488C /* CustomStyles.swift */,
 				9DF6B3AC228CEFC60089F954 /* Extensions.swift */,
-				9D540D472289FEE80090B7D2 /* CustomSwitchView.swift */,
-				9DF6B3B2228D42C60089F954 /* Side Menu */,
 				9DF6B3AB228CEAC20089F954 /* Login and Signup */,
 				9DF6B3DC228F62BB0089F954 /* My Recipes */,
 				9DF6B3D1228F3D240089F954 /* My Groups */,
@@ -372,7 +372,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D866F6722A5FBBA00D783DA /* ChildResetPasswordTableViewController.swift in Sources */,
-				9D540D482289FEE80090B7D2 /* CustomSwitchView.swift in Sources */,
 				9D866F6522A4CC4100D783DA /* GroupMemberTableViewCell.swift in Sources */,
 				9D540D262288FBDA0090B7D2 /* ShadowCellView.swift in Sources */,
 				9D866F6122A4CBF300D783DA /* GroupDetailTableViewController.swift in Sources */,
@@ -381,6 +380,7 @@
 				9D866F6922A5FBC900D783DA /* ResetPasswordViewController.swift in Sources */,
 				9D1F2EE0229778D7001AC220 /* GroupController.swift in Sources */,
 				9D866F5822A1EA9F00D783DA /* PDFCreator.swift in Sources */,
+				9D54DF7622B5C7F60098FE0D /* Secret.swift in Sources */,
 				9DF6B3D3228F3D720089F954 /* Group.swift in Sources */,
 				9DF6B3C7228E32E80089F954 /* User.swift in Sources */,
 				9DCFD2AB2295060F002F4F7A /* AddStepsTableViewCell.swift in Sources */,

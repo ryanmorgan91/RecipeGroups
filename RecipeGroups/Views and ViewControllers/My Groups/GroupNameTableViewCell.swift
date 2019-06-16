@@ -9,7 +9,6 @@
 import UIKit
 
 class GroupNameTableViewCell: UITableViewCell {
-
     
     @IBOutlet weak var groupImage: UIImageView!
     @IBOutlet weak var groupLabel: UILabel!
@@ -19,14 +18,8 @@ class GroupNameTableViewCell: UITableViewCell {
         
         setupCell()
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-    }
     
     func setupCell() {
         groupImage.tintColor = CustomStyles.shared.customPink
     }
-
 }

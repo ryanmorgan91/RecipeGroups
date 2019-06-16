@@ -22,10 +22,9 @@ class ResetPasswordViewController: UIViewController {
     }
     
     func setupView() {
-        let customSyles = CustomStyles()
         resetPasswordButton.setTitle(resetPassword, for: .normal)
         resetPasswordButton.backgroundColor = .white
-        resetPasswordButton.setTitleColor(customSyles.customPink, for: .normal)
+        resetPasswordButton.setTitleColor(CustomStyles.shared.customPink, for: .normal)
         resetPasswordButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 24)
         resetPasswordButton.layer.cornerRadius = 10
         self.navigationItem.title = resetPassword
@@ -42,6 +41,8 @@ class ResetPasswordViewController: UIViewController {
             let alertController = UIAlertController(title: "Password Reset Request", message: result, preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: { (_) in
                 if result == "Check your email for password reset instructions" {
+                    
+                    // Dismiss the ViewController if password reset process was successful
                     self.dismiss(animated: true, completion: nil)
                 }
             })
@@ -49,15 +50,4 @@ class ResetPasswordViewController: UIViewController {
             self.present(alertController, animated: true, completion: nil)
         }
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

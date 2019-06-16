@@ -23,9 +23,9 @@ class MenuViewController: UIViewController {
         super.viewDidLoad()
         
         setupView()
-        // Do any additional setup after loading the view.
     }
     
+    // Add custom styles
     func setupView() {
         userNameLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         userNameLabel.text = UserController.shared.user?.name
@@ -46,6 +46,7 @@ class MenuViewController: UIViewController {
         }
     }
     
+    // Create reference to childViewController when childViewController appears
     func createReference(to childViewController: ChildMenuTableViewController) {
         self.childViewController = childViewController
         childViewController.delegate = self
@@ -53,6 +54,7 @@ class MenuViewController: UIViewController {
 
 }
 
+// Also a delegate of childViewController so that MenuViewController knows when the user tapped a menu item
 extension MenuViewController: SideMenuDelegate {
     func userTapped(menuButton: String) {
         dismiss(animated: true) {

@@ -19,7 +19,6 @@ class GroupDetailTableViewController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        
         return 3
     }
 
@@ -56,7 +55,7 @@ class GroupDetailTableViewController: UITableViewController {
             }
         }
         
-        // Default return value in case there is an error
+        // If there is an error with the group, return an initialized UITableViewCell()
         return UITableViewCell()
     }
     
@@ -65,11 +64,12 @@ class GroupDetailTableViewController: UITableViewController {
         let creator = "Creator"
         let groupMembers = "Group Members"
         
-        if section == 0 {
+        switch section {
+        case 0:
             return groupName
-        } else if section == 1 {
+        case 1:
             return creator
-        } else {
+        default:
             return groupMembers
         }
     }
@@ -85,6 +85,8 @@ class GroupDetailTableViewController: UITableViewController {
     @objc func deleteGroupTapped() {
         let alertController = UIAlertController(title: "Delete Group", message: "Are you sure you want to delete this group?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        // Send a request to the server to delete the group if "Delete Group" button is tapped
         let deleteGroupAction = UIAlertAction(title: "Delete Group", style: .default) { (_) in
             GroupController.shared.deleteGroup(named: self.group!.name, completion: { (result) in
                 if result == "Success" {
@@ -93,18 +95,22 @@ class GroupDetailTableViewController: UITableViewController {
                 }
             })
         }
+        
         alertController.addAction(cancelAction)
         alertController.addAction(deleteGroupAction)
         present(alertController, animated: true, completion: nil)
     }
     
+    
     @objc func leaveGroupTapped() {
         let alertController = UIAlertController(title: "Leave Group", message: "Are you sure you want to leave this group?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        // Send a request to the server to delete the group if the "Leave Group" button is tapped
         let leaveGroupAction = UIAlertAction(title: "Leave Group", style: .default) { (_) in
             GroupController.shared.deleteGroup(named: self.group!.name, completion: { (result) in
                 if result == "Success" {
-                    print(result)
+    
                     GroupController.shared.processLeaveGroup(named: self.group!.name)
                     self.navigationController?.popViewController(animated: true)
                 }

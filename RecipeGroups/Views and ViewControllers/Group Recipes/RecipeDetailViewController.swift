@@ -11,12 +11,15 @@ import PDFKit
 
 class RecipeDetailViewController: UIViewController {
 
+    // Uses lazy initialization to set the childSteps variable the first time it's used
     private lazy var childSteps: ChildStepsTableViewController = {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         var viewController = storyboard.instantiateViewController(withIdentifier: "ChildSteps") as! ChildStepsTableViewController
         
         return viewController
     }()
+    
+    // Uses lazy initialization to set the childIngredients variable the first time it's used
     private lazy var childIngredients: ChildIngredientsTableViewController = {
         let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         var viewController = storyboard.instantiateViewController(withIdentifier: "ChildIngredients") as! ChildIngredientsTableViewController
@@ -24,8 +27,8 @@ class RecipeDetailViewController: UIViewController {
         return viewController
     }()
     
+    @IBOutlet weak var recipeSwitch: UIView!
     @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var recipeSwitch: CustomSwitchView!
     @IBOutlet weak var switchBaseImage: UIImageView!
     @IBOutlet weak var switchActiveImage: UIImageView!
     @IBOutlet weak var switchActiveTrailingConstraint: NSLayoutConstraint!
@@ -69,6 +72,7 @@ class RecipeDetailViewController: UIViewController {
         animateSwitch()
     }
     
+    // If the switch is tapped, animate it and move it left/right
     func animateSwitch() {
         if showSteps {
             showSteps = !showSteps
@@ -97,6 +101,7 @@ class RecipeDetailViewController: UIViewController {
         child.didMove(toParent: self)
     }
     
+    // If showSteps = true, add the childSteps view onto the current view, else add the childIngredients view
     func updateView() {
         guard let recipe = recipe else { return }
         if showSteps {
@@ -121,13 +126,8 @@ class RecipeDetailViewController: UIViewController {
     func setupView() {
         guard let recipe = recipe else { return }
         self.navigationItem.title = recipe.name
-        
-        /* Comment the function call below to add sample images */
-//        setupImage(with: recipe)
-        
-        /* Comment the below to get rid of samples */
+
         recipeImage.image = recipe.image
-        
         recipeTitleLabel.text = recipe.name
         recipeCookTimeLabel.text = recipe.cookTime.rawValue
         difficultyLabel.text = recipe.cookingDifficulty.rawValue
@@ -144,22 +144,14 @@ class RecipeDetailViewController: UIViewController {
         likeButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 17)
         descriptionLabel.textColor = UIColor.gray
         
-        
         if let isLiked = recipe.isLiked {
             likeButton.isSelected = isLiked
         }
+        
         likeButton.setTitle("Like", for: .normal)
         likeButton.setTitle("", for: .selected)
     }
     
-    func setupImage(with recipe: Recipe) {
-        RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
-            guard let image = image else { return }
-            DispatchQueue.main.async {
-                self.recipeImage.image = image
-            }
-        }
-    }
     @IBAction func exportButtonClicked(_ sender: Any) {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let pdfAction = UIAlertAction(title: "View as PDF", style: .default) { (_) in
@@ -226,6 +218,4 @@ class RecipeDetailViewController: UIViewController {
         
         setupView()
     }
-    
-
 }

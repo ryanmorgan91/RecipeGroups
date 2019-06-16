@@ -10,7 +10,6 @@ import UIKit
 
 class JoinGroupTableViewController: UITableViewController {
 
-    
     @IBOutlet weak var groupNameImage: UIImageView!
     @IBOutlet weak var groupNameTextField: UITextField!
     @IBOutlet weak var passwordImage: UIImageView!
@@ -31,11 +30,13 @@ class JoinGroupTableViewController: UITableViewController {
     }
 
     @IBAction func joinButtonTapped(_ sender: UIBarButtonItem) {
+        // Check if form fields have been left blank
         guard groupNameTextField.text != "" else { return }
         guard passwordTextField.text != "" else { return }
         let groupName = groupNameTextField.text!
         let password = passwordTextField.text!
         
+        // Check if the user is already a member of a group with the same name
         guard !GroupController.shared.groups.contains(where: { $0.name == groupName  }) else {
             let message = "You are already a member of a group with that name"
             let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
@@ -45,6 +46,7 @@ class JoinGroupTableViewController: UITableViewController {
             return
         }
         
+        // Check if the server successfully created the group
         GroupController.shared.joinGroup(named: groupName, withPassword: password) { (result) in
             if result == "Success" {
                 GroupController.shared.processNewGroup(named: groupName)
@@ -62,5 +64,4 @@ class JoinGroupTableViewController: UITableViewController {
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
-    
 }

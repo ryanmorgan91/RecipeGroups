@@ -31,6 +31,4 @@ class ChildResetPasswordTableViewController: UITableViewController {
         self.tableView.backgroundColor = .clear
         emailTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
-    
-    
 }

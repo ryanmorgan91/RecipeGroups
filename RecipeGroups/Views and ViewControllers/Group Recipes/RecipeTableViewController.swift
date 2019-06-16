@@ -22,7 +22,6 @@ class RecipeTableViewController: UITableViewController {
         updateUI()
     }
 
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return recipes.count
     }
@@ -30,20 +29,21 @@ class RecipeTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath) as! RecipeTableViewCell
         
-        /* Comment the following to add samples */
-//        configure(cell, forItemAt: indexPath)
+        /* Comment the following if using samples */
+        configure(cell, forItemAt: indexPath)
         
-        /* comment the following to remove sample images */
-        
+        /* comment the following to remove sample images
+ 
         let recipe = recipes[indexPath.section]
         cell.recipeLabel.text = recipe.name
         cell.recipeImage.image = recipe.image
-        
+
+         */
+ 
         return cell
     }
     
@@ -70,6 +70,7 @@ class RecipeTableViewController: UITableViewController {
                 }
                 cell.recipeImage.image = image
                 cell.setNeedsLayout()
+                recipe.image = image
             }
         }
     }
@@ -116,10 +117,7 @@ extension RecipeTableViewController: SideMenuDelegate {
         default:
             break
         }
-        
     }
-    
-    
 }
 
 extension RecipeTableViewController: UIViewControllerTransitioningDelegate {

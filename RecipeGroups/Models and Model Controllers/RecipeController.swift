@@ -9,33 +9,14 @@
 import Foundation
 import UIKit
 
-extension URL {
-    
-    func withQueries(_ queries: [String: String]) -> URL? {
-        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)
-        components?.queryItems = queries.compactMap({ URLQueryItem(name: $0.0, value: $0.1) })
-        
-        return components?.url
-    }
-    
-}
-
-extension NSMutableData {
-    func appendString(_ string: String) {
-        let data = string.data(using: String.Encoding.utf8, allowLossyConversion: false)
-        append(data!)
-    }
-}
-
 class RecipeController {
+    
     static let shared = RecipeController()
     
     static let recipeDataUpdatedNotification = Notification.Name("RecipeController.recipeDataUpdated")
     
     var recipes: [Recipe] = []
-    
-    let baseURL = URL(string: "http://3.19.58.34:80/")!
-    //    let queries: [String: String] = ["user":"ryan"]
+    let baseURL = Secret.shared.baseURL
 
     func sendRecipe(recipe: Recipe, completion: @escaping () -> ()) {
         let url = baseURL.appendingPathComponent("add_recipe")
@@ -121,35 +102,8 @@ class RecipeController {
         task.resume()
     }
     
-//    func sendRecipes(recipe: Recipe) {
-//        let url = baseURL.appendingPathComponent("add_recipes")
-//        var request = URLRequest(url: url)
-//        request.httpMethod = "POST"
-//        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//        guard let imageData = recipe.image.jpegData(compressionQuality: 0.6) else { return }
-//        let imageDataAsString = imageData.base64EncodedString(options: .lineLength64Characters)
-//
-//        let data: [String: Any] = [
-//            "title": recipe.name,
-//            "description": recipe.description,
-//            "category": recipe.category.rawValue,
-//            "cookingTime": recipe.cookTime.rawValue,
-//            "difficulty": recipe.cookingDifficulty.rawValue,
-//            "ingredients": recipe.ingredients,
-//            "steps": recipe.steps,
-//            "recipeImage": imageDataAsString
-//        ]
-//        let ingredients: [String: [String]] = [
-//            "ingredients": recipe.ingredients,
-//            "steps": recipe.steps
-//        ]
-//        let imageData = UIImage.JPEG
-//        // TO DO: Figure out how to send image
-//    }
-    
     func process(recipes: [Recipe]) {
         self.recipes = recipes
-        print ("process test")
         
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
@@ -179,15 +133,9 @@ class RecipeController {
             let jsonDecoder = JSONDecoder()
             
             if let data = data,
-//                let result = String(data: data, encoding: .utf8) {
-//                print(result)
-//            }
                 let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
                     self.process(recipes: recipes)
-                    print("success")
-            } else {
-                print("failure")
-            }
+            } 
         }
         task.resume()
     }
@@ -212,5 +160,4 @@ class RecipeController {
             try? data.write(to: recipeFileURL)
         }
     }
-    
 }

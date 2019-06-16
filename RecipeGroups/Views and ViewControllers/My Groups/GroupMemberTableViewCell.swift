@@ -19,13 +19,7 @@ class GroupMemberTableViewCell: UITableViewCell {
         setupCell()
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-    }
-
     func setupCell() {
         memberImage.tintColor = CustomStyles.shared.customPink
     }
-    
 }

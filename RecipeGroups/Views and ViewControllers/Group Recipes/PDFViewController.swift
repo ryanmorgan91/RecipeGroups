@@ -38,10 +38,7 @@ class PDFViewController: UIViewController, UIPrintInteractionControllerDelegate 
         let pdfData = PDFCreator.shared.createPDFFromRecipe(recipe: recipe)
         pdfDocument = PDFDocument(data: pdfData)
         pdfView.document = pdfDocument
-        
-        
     }
-    
     
     @IBAction func doneButtonTapped(_ sender: UIBarButtonItem) {
         navigationController?.popViewController(animated: true)

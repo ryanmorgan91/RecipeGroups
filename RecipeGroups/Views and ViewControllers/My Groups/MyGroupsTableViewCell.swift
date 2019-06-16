@@ -16,13 +16,10 @@ class MyGroupsTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
     func setupCell() {
@@ -30,5 +27,4 @@ class MyGroupsTableViewCell: UITableViewCell {
         groupLabel.textColor = .white
         groupLabel.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 20)
     }
-
 }

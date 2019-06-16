@@ -9,10 +9,12 @@
 import Foundation
 
 final class GroupController {
+    
     static let groupDataUpdatedNotification = Notification.Name("GroupController.groupDataUpdated")
     
     static let shared = GroupController()
-    let baseURL = RecipeController.shared.baseURL
+    
+    let baseURL = Secret.shared.baseURL
     var groups: [Group] = []
     
     func process(groups: [Group]) {
@@ -58,8 +60,6 @@ final class GroupController {
                 DispatchQueue.main.async {
                     self.process(groups: groups)
                 }
-            } else {
-                print("failure")
             }
         }
         task.resume()
@@ -86,7 +86,6 @@ final class GroupController {
             if let data = data,
                 let response = try? jsonDecoder.decode([String: String].self, from: data),
                 let result = response["Result"] {
-                print(response)
                 DispatchQueue.main.async {
                     completion(result)
                 }
@@ -116,7 +115,6 @@ final class GroupController {
             if let data = data,
                 let response = try? jsonDecoder.decode([String: String].self, from: data),
                 let result = response["Result"] {
-                print(response)
                 DispatchQueue.main.async {
                     completion(result)
                 }
@@ -171,7 +169,6 @@ final class GroupController {
                 let result = response["Result"] {
                 DispatchQueue.main.async {
                     completion(result)
-                    print(result)
                 }
             }
         }

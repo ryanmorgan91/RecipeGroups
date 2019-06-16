@@ -9,6 +9,8 @@
 import UIKit
 
 extension AddRecipeTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    // Appropriately respond to user tapping the recipe image based on the available image sources
     func userTappedRecipeImage() {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
@@ -49,7 +51,6 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
 
     @IBOutlet weak var recipeImageView: UIImageView!
     @IBOutlet weak var titleTextField: UITextField!
-
     @IBOutlet weak var categoryPickerView: UIPickerView!
     @IBOutlet weak var cookingTimePickerView: UIPickerView!
     @IBOutlet weak var difficultyPickerView: UIPickerView!
@@ -64,7 +65,6 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     @IBOutlet weak var difficultyImageView: UIImageView!
     @IBOutlet weak var ingredientsImageView: UIImageView!
     @IBOutlet weak var stepImageView: UIImageView!
-    
     @IBOutlet weak var addImageLabel: UILabel!
     @IBOutlet weak var ingredientsLabel: UILabel!
     @IBOutlet weak var stepsLabel: UILabel!
@@ -83,16 +83,19 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
             categoryPickerView.isHidden = !isCategoryPickerShown
         }
     }
+    
     var isCookingTimePickerShown: Bool = false {
         didSet {
             cookingTimePickerView.isHidden = !isCookingTimePickerShown
         }
     }
+    
     var isDifficultyPickerShown: Bool = false {
         didSet {
             difficultyPickerView.isHidden = !isDifficultyPickerShown
         }
     }
+    
     var recipeImage: UIImage? {
         didSet {
             recipeImageView.image = recipeImage
@@ -109,11 +112,6 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         super.viewDidLoad()
         
         setupView()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
     }
     
     func setupView() {
@@ -269,12 +267,10 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print(ingredients)
         if segue.identifier == "SegueFromAddRecipeToIngredients" {
             let destinationViewController = segue.destination as! AddIngredientsTableViewController
             destinationViewController.ingredients = ingredients
-            print(ingredients)
-            print(destinationViewController.ingredients)
+  
         } else if segue.identifier == "SegueFromAddRecipeToSteps" {
             let destinationViewController = segue.destination as! AddStepsTableViewController
             destinationViewController.steps = steps
@@ -286,15 +282,14 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
             let sourceViewController = unwindSegue.source as! AddIngredientsTableViewController
             let ingredients = sourceViewController.ingredients
             self.ingredients = ingredients
-            print("Ingredients from AddRecipe Controller: \(ingredients)")
         } else if unwindSegue.identifier == "SaveUnwindFromAddSteps" {
             let sourceViewController = unwindSegue.source as! AddStepsTableViewController
             let steps = sourceViewController.steps
             self.steps = steps
-            print("Steps from AddRecipe Controller: \(steps)")
         }
     }
     
+    // Check if all fields have been filled out
     @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
         if (steps == [""]) || (ingredients == [""]) || (recipeImage == nil) || (titleTextField.text == "") ||
             (descriptionTextView.text == "Description" || descriptionTextView.text == "") ||
@@ -320,6 +315,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         }
     }
     
+    // encode partially filled out form if app will be restored
     override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
         recipeDict.removeAll()
@@ -336,6 +332,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         coder.encode(recipeDict, forKey: "recipeDict")
     }
     
+    // Decode restorable state based on partially filled out form
     override func decodeRestorableState(with coder: NSCoder) {
         super.decodeRestorableState(with: coder)
         recipeDict.removeAll()
@@ -344,6 +341,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         updateViewFrom(recipeDict)
     }
     
+    // Update the views fields based on which forms were partially filled in
     func updateViewFrom(_ recipeDict: [String: Any]) {
         let keys = recipeDict.keys
         if keys.contains("title") { titleTextField.text = (recipeDict["title"] as! String) }

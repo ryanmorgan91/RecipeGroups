@@ -23,12 +23,10 @@ class CreateAccountViewController: UIViewController {
     }
     
     func setupView() {
-        
         signInButton.setTitleColor(.white, for: .normal)
         signInButton.backgroundColor = CustomStyles.shared.customPink
         signInButton.layer.cornerRadius = 10
         signInButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 24)
-        
     }
     
     func createReference(to childViewController: ChildCreateAccountTableViewController) {
@@ -41,6 +39,7 @@ class CreateAccountViewController: UIViewController {
         let firstPasswordTextField = childViewController!.firstPasswordTextField
         let secondPasswordTextField = childViewController!.secondPasswordTextField
         
+        // Check if all fields are filled in
         if (name == "" || email == "" || firstPasswordTextField?.text == "" || secondPasswordTextField?.text == "") {
             
             let alertController = UIAlertController(title: "Oops", message: "All fields must be filled in", preferredStyle: .alert)
@@ -50,6 +49,7 @@ class CreateAccountViewController: UIViewController {
 
             return
             
+          // Check if passwords match
         } else if (firstPasswordTextField?.text != secondPasswordTextField?.text) {
             let alertController = UIAlertController(title: "Oops", message: "Your passwords don't match.", preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
@@ -67,10 +67,11 @@ class CreateAccountViewController: UIViewController {
             self.removeActivityIndicator(activityBackgroundView: activityIndicatorBackground)
             
             if result == "Success" {
-                UserController.shared.user = User(name: name, email: email)
+                UserController.shared.updateUser(name: name, email: email)
                 
                 self.performSegue(withIdentifier: "newAccountSegue", sender: nil)
             } else {
+                // Alert user with failure message
                 let alertController = UIAlertController(title: "Oops", message: result, preferredStyle: .alert)
                 let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
                 alertController.addAction(alertAction)
@@ -79,11 +80,13 @@ class CreateAccountViewController: UIViewController {
         }
     }
     
+    // Add observers for keyboard appearing and hiding
     func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
+    // When keyboard appears, increase scrollview content insets so that the forms are not covered by the keyboard
     @objc func keyboardWasShown(_ notification: NSNotification) {
         guard let info = notification.userInfo,
             let keyboardFrameValue = info[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue else { return }
@@ -95,6 +98,7 @@ class CreateAccountViewController: UIViewController {
         scrollView.scrollIndicatorInsets = contentInsets
     }
     
+    // When keyboard is hidden, remove content insets
     @objc func keyboardWillBeHidden(_ notification: NSNotification) {
         let contentInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInsets

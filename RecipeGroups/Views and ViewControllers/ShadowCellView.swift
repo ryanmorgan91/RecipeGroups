@@ -10,6 +10,7 @@ import UIKit
 
 class ShadowCellView: UIView {
 
+    // Add shadow when bounds is set
     override var bounds: CGRect {
         didSet {
             setupShadow()

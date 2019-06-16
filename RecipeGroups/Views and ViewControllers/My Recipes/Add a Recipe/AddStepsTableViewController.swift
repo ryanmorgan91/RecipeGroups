@@ -16,7 +16,6 @@ class AddStepsTableViewController: UITableViewController {
         super.viewDidLoad()
         
         self.navigationItem.rightBarButtonItem = editButtonItem
-        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -24,24 +23,20 @@ class AddStepsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "StepCell", for: indexPath) as! AddStepsTableViewCell
         cell.stepBullet.tintColor = CustomStyles.shared.customPink
         cell.stepTextField.text = steps[indexPath.row]
+        
         return cell
     }
     
-    
-    
-    // Override to support conditional editing of the table view.
+    // Support conditional editing of the table view
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if indexPath.section == 1 {
-            return false
-        } else {
-            return true
-        }
+        
+        return true
     }
     
+    // Allow insert if row = 0, else allow delete
     override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         if indexPath == IndexPath(row: 0, section: 0) {
             return .insert
@@ -51,11 +46,12 @@ class AddStepsTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
         if editingStyle == .delete {
             steps.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
-            steps.insert("test", at: steps.count - 1)
+            steps.insert("", at: steps.count - 1)
             tableView.insertRows(at: [IndexPath(row: steps.count - 1, section: 0)], with: .automatic)
         }
     }
@@ -68,6 +64,21 @@ class AddStepsTableViewController: UITableViewController {
         guard segue.identifier == "SaveUnwindFromAddSteps" else { return }
         
         var counter = 0
+
+        for i in 0 ... steps.count - 1 {
+            let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0)) as! AddStepsTableViewCell
+            let step = cell.stepTextField.text ?? ""
+            if step != "" {
+                self.steps[counter] = step
+                counter += 1
+            }
+        }
+    }
+    
+    override func encodeRestorableState(with coder: NSCoder) {
+        super.encodeRestorableState(with: coder)
+        
+        var counter = 0
         
         for i in 0 ... steps.count - 1 {
             let cell = tableView.cellForRow(at: IndexPath(row: i, section: 0)) as! AddStepsTableViewCell
@@ -77,61 +88,14 @@ class AddStepsTableViewController: UITableViewController {
                 counter += 1
             }
         }
-        print(steps)
+        
+        coder.encode(steps, forKey: "StepsKey")
     }
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    
+    override func decodeRestorableState(with coder: NSCoder) {
+        super.decodeRestorableState(with: coder)
+        
+        steps = coder.decodeObject(forKey: "StepsKey") as! [String]
+        tableView.reloadData()
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
