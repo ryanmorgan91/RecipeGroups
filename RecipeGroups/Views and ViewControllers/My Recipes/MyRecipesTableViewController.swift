@@ -16,9 +16,6 @@ class MyRecipesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Add observer for recipe data changing (i.e., server has returned recipe data)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: RecipeController.recipeDataUpdatedNotification, object: nil)
-        
         setupView()
         updateUI()
     }
@@ -52,11 +49,16 @@ class MyRecipesTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem?.tintColor = CustomStyles.shared.customPink
     }
     
-    @objc func updateUI() {
-        self.recipes = RecipeController.shared.recipes.filter({ $0.author == UserController.shared.user!.email })
+    func updateUI() {
+        
+        if let savedRecipes = RecipeController.shared.loadSavedRecipes() {
+            self.recipes = savedRecipes
+        }
+        
         if let likedRecipes = RecipeController.shared.loadLikedRecipes() {
             self.recipes += likedRecipes
         }
+        
         self.tableView.reloadData()
     }
     
@@ -100,13 +102,17 @@ class MyRecipesTableViewController: UITableViewController {
     }
 }
 
-// Either perform the logout segue (if user tapped "logout"), or push the corresponding view controller onto the navigation stack
+// Either log the user out (if user tapped "logout"), or push the corresponding view controller onto the navigation stack
 extension MyRecipesTableViewController: SideMenuDelegate {
     func userTapped(menuButton: String) {
         switch menuButton {
         case "Logout":
-            UserController.shared.logoutUser {
-                self.performSegue(withIdentifier: "SignOutFromMyRecipes", sender: nil)
+            if !UserController.shared.userIsLoggedIn {
+                if let viewConstroller = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+                    self.navigationController?.pushViewController(viewConstroller, animated: true)
+                }
+            } else {
+                UserController.shared.logoutUser()
             }
         case "My Groups":
             if let viewController = storyboard?.instantiateViewController(withIdentifier: "MyGroupsTableViewController") as? MyGroupsTableViewController {
@@ -114,6 +120,10 @@ extension MyRecipesTableViewController: SideMenuDelegate {
             }
         case "Recipes":
             self.navigationController?.popToRootViewController(animated: true)
+        case "Create Account":
+            if let viewController = storyboard?.instantiateViewController(withIdentifier: "CreateAccountViewController") as? CreateAccountViewController {
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
         default:
             break
         }

@@ -31,6 +31,7 @@
 		9D866F6522A4CC4100D783DA /* GroupMemberTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D866F6422A4CC4100D783DA /* GroupMemberTableViewCell.swift */; };
 		9D866F6722A5FBBA00D783DA /* ChildResetPasswordTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D866F6622A5FBBA00D783DA /* ChildResetPasswordTableViewController.swift */; };
 		9D866F6922A5FBC900D783DA /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D866F6822A5FBC900D783DA /* ResetPasswordViewController.swift */; };
+		9DA724D722BA0E0E00E95D0F /* GroupPasswordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA724D622BA0E0E00E95D0F /* GroupPasswordTableViewCell.swift */; };
 		9DCFD2A72294FE0B002F4F7A /* AddStepsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DCFD2A62294FE0B002F4F7A /* AddStepsTableViewController.swift */; };
 		9DCFD2A9229503A2002F4F7A /* AddIngredientTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DCFD2A8229503A2002F4F7A /* AddIngredientTableViewCell.swift */; };
 		9DCFD2AB2295060F002F4F7A /* AddStepsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DCFD2AA2295060F002F4F7A /* AddStepsTableViewCell.swift */; };
@@ -90,6 +91,7 @@
 		9D866F6422A4CC4100D783DA /* GroupMemberTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMemberTableViewCell.swift; sourceTree = "<group>"; };
 		9D866F6622A5FBBA00D783DA /* ChildResetPasswordTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildResetPasswordTableViewController.swift; sourceTree = "<group>"; };
 		9D866F6822A5FBC900D783DA /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		9DA724D622BA0E0E00E95D0F /* GroupPasswordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPasswordTableViewCell.swift; sourceTree = "<group>"; };
 		9DCFD2A62294FE0B002F4F7A /* AddStepsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStepsTableViewController.swift; sourceTree = "<group>"; };
 		9DCFD2A8229503A2002F4F7A /* AddIngredientTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddIngredientTableViewCell.swift; sourceTree = "<group>"; };
 		9DCFD2AA2295060F002F4F7A /* AddStepsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStepsTableViewCell.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				9D866F6022A4CBF300D783DA /* GroupDetailTableViewController.swift */,
 				9D866F6222A4CC2F00D783DA /* GroupNameTableViewCell.swift */,
 				9D866F6422A4CC4100D783DA /* GroupMemberTableViewCell.swift */,
+				9DA724D622BA0E0E00E95D0F /* GroupPasswordTableViewCell.swift */,
 			);
 			path = "My Groups";
 			sourceTree = "<group>";
@@ -403,6 +406,7 @@
 				9DF6B3DB228F62AB0089F954 /* MyRecipesTableViewController.swift in Sources */,
 				9D540D242288F4F20090B7D2 /* Recipe.swift in Sources */,
 				9DF6B3CB228E8D960089F954 /* SideMenuDelegate.swift in Sources */,
+				9DA724D722BA0E0E00E95D0F /* GroupPasswordTableViewCell.swift in Sources */,
 				9DF6B3AD228CEFC60089F954 /* Extensions.swift in Sources */,
 				9DF6B3B4228D44420089F954 /* MenuHelper.swift in Sources */,
 				9DF6B3C3228DF82A0089F954 /* CreateAccountViewController.swift in Sources */,

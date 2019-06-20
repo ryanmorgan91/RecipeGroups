@@ -18,7 +18,7 @@ class RecipeController {
     var recipes: [Recipe] = []
     let baseURL = Secret.shared.baseURL
 
-    func sendRecipe(recipe: Recipe, completion: @escaping () -> ()) {
+    func sendRecipe(recipe: Recipe) {
         let url = baseURL.appendingPathComponent("add_recipe")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -53,7 +53,6 @@ class RecipeController {
                 let recipe = try? jsonDecoder.decode(Recipe.self, from: data) {
                 DispatchQueue.main.async {
                     self.processNew(recipe: recipe)
-                    completion()
                 }
             }
         }
@@ -103,7 +102,7 @@ class RecipeController {
     }
     
     func process(recipes: [Recipe]) {
-        self.recipes = recipes
+        self.recipes += recipes
         
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
@@ -135,7 +134,7 @@ class RecipeController {
             if let data = data,
                 let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
                     self.process(recipes: recipes)
-            } 
+            }
         }
         task.resume()
     }
@@ -143,21 +142,42 @@ class RecipeController {
     
     func loadLikedRecipes() -> [Recipe]? {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
-        guard let data = try? Data(contentsOf: recipeFileURL) else { return nil }
+        let likedRecipeFileURL = documentsDirectoryURL.appendingPathComponent("likedRecipe").appendingPathExtension("json")
+        guard let data = try? Data(contentsOf: likedRecipeFileURL) else { return nil }
         let jsonDecoder = JSONDecoder()
-        if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
-            return recipes
+        if let likedRecipes = try? jsonDecoder.decode([Recipe].self, from: data) {
+            return likedRecipes
         }
         return nil
     }
     
     func saveLikedRecipe(_ recipe: Recipe) {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let likedRecipeFileURL = documentsDirectoryURL.appendingPathComponent("likedRecipe").appendingPathExtension("json")
+        let jsonEncoder = JSONEncoder()
+        if let data = try? jsonEncoder.encode(recipe) {
+            try? data.write(to: likedRecipeFileURL)
+        }
+    }
+    
+    func saveUserRecipe(_ recipe: Recipe) {
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
         let jsonEncoder = JSONEncoder()
         if let data = try? jsonEncoder.encode(recipe) {
             try? data.write(to: recipeFileURL)
         }
+    }
+    
+    func loadSavedRecipes() -> [Recipe]? {
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
+        guard let data = try? Data(contentsOf: recipeFileURL) else { return nil }
+        let jsonDecoder = JSONDecoder()
+        if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
+            
+            return recipes
+        }
+        return nil
     }
 }

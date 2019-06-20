@@ -69,7 +69,7 @@ class CreateAccountViewController: UIViewController {
             if result == "Success" {
                 UserController.shared.updateUser(name: name, email: email)
                 
-                self.performSegue(withIdentifier: "newAccountSegue", sender: nil)
+                self.navigationController?.popToRootViewController(animated: true)
             } else {
                 // Alert user with failure message
                 let alertController = UIAlertController(title: "Oops", message: result, preferredStyle: .alert)
@@ -106,6 +106,6 @@ class CreateAccountViewController: UIViewController {
     }
     
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
-        self.dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
 }

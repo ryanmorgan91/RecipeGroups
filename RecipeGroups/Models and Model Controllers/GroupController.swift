@@ -18,6 +18,12 @@ final class GroupController {
     var groups: [Group] = []
     
     func process(groups: [Group]) {
+        guard let user = UserController.shared.user else { return }
+        for group in groups {
+            if group.name == "Sample Group" && group.creator == "johnsmith@example.com" {
+                group.members = ["johnsmith@example.com", user.email]
+            }
+        }
         self.groups = groups
 
         NotificationCenter.default.post(name: GroupController.groupDataUpdatedNotification, object: nil)
@@ -25,6 +31,14 @@ final class GroupController {
     
     func processNewGroup(named groupName: String) {
         let group = Group(name: groupName, creator: UserController.shared.user!.email, members: [UserController.shared.user!.email])
+        self.groups.append(group)
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: GroupController.groupDataUpdatedNotification, object: nil)
+        }
+    }
+    
+    func processCreatedGroup(named groupName: String, withPassword password: String) {
+        let group = Group(name: groupName, creator: UserController.shared.user!.email, members: [UserController.shared.user!.email], password: password)
         self.groups.append(group)
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: GroupController.groupDataUpdatedNotification, object: nil)

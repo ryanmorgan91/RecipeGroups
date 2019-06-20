@@ -77,6 +77,16 @@ class MyGroupsTableViewController: UITableViewController {
     }
     
     @IBAction func plusButtonTapped(_ sender: UIBarButtonItem) {
+        
+        // Restrict the group feature to logged in users
+        if !UserController.shared.userIsLoggedIn {
+            let notLoggedInController = UIAlertController(title: nil, message: "You must be logged in to join or create groups", preferredStyle: .alert)
+            let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+            notLoggedInController.addAction(dismissAction)
+            self.present(notLoggedInController, animated: true, completion: nil)
+            return
+        }
+        
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let joinGroupAction = UIAlertAction(title: "Join a Group", style: .default) { (_) in
             self.performSegue(withIdentifier: "SegueFromMyGroupsToJoinAGroup", sender: nil)
@@ -97,13 +107,21 @@ extension MyGroupsTableViewController: SideMenuDelegate {
 
         switch menuButton {
         case "Logout":
-            UserController.shared.logoutUser {
-                self.performSegue(withIdentifier: "SignOutFromMyGroups", sender: nil)
+            if !UserController.shared.userIsLoggedIn {
+                if let viewConstroller = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+                    self.navigationController?.pushViewController(viewConstroller, animated: true)
+                }
+            } else {
+                UserController.shared.logoutUser()
             }
         case "Recipes":
             self.navigationController?.popToRootViewController(animated: true)
         case "My Recipes":
             if let viewController = storyboard?.instantiateViewController(withIdentifier: "MyRecipesTableViewController") as? MyRecipesTableViewController {
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
+        case "Create Account":
+            if let viewController = storyboard?.instantiateViewController(withIdentifier: "CreateAccountViewController") as? CreateAccountViewController {
                 self.navigationController?.pushViewController(viewController, animated: true)
             }
         default:

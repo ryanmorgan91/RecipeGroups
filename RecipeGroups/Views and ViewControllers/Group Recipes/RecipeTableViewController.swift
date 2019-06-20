@@ -96,22 +96,36 @@ class RecipeTableViewController: UITableViewController {
             destinationViewController.recipe = self.recipes[index]
         }
     }
+    
+    
+    @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
+        if let addRecipeNavigationController = storyboard?.instantiateViewController(withIdentifier: "AddRecipeNav") as? UINavigationController {
+            self.present(addRecipeNavigationController, animated: true, completion: nil)
+        }
+    }
 }
 
 extension RecipeTableViewController: SideMenuDelegate {
     func userTapped(menuButton: String) {
         switch menuButton {
         case "Logout":
-            UserController.shared.logoutUser {
-                self.performSegue(withIdentifier: "SignOutFromRecipeTableView", sender: nil)
+            if !UserController.shared.userIsLoggedIn {
+                if let viewConstroller = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+                    self.navigationController?.pushViewController(viewConstroller, animated: true)
+                }
+            } else {
+                UserController.shared.logoutUser()
             }
         case "My Groups":
-            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             if let viewController = storyboard?.instantiateViewController(withIdentifier: "MyGroupsTableViewController") as? MyGroupsTableViewController {
                 self.navigationController?.pushViewController(viewController, animated: true)
             }
         case "My Recipes":
             if let viewController = storyboard?.instantiateViewController(withIdentifier: "MyRecipesTableViewController") as? MyRecipesTableViewController {
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
+        case "Create Account":
+            if let viewController = storyboard?.instantiateViewController(withIdentifier: "CreateAccountViewController") as? CreateAccountViewController {
                 self.navigationController?.pushViewController(viewController, animated: true)
             }
         default:

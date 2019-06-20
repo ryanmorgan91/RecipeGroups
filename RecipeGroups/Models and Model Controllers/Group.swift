@@ -15,17 +15,20 @@ final class Group: Codable {
     var name: String
     var creator: String
     var members: [String]
+    var password: String?
     
-    init(name: String, creator: String, members: [String]) {
+    init(name: String, creator: String, members: [String], password: String? = nil) {
         self.name = name
         self.creator = creator
         self.members = members
+        self.password = password
     }
     
     enum CodingKeys: String, CodingKey {
         case name
         case creator
         case members
+        case password
     }
     
     init(from decoder: Decoder) throws {
@@ -33,6 +36,7 @@ final class Group: Codable {
         self.name = try container.decode(String.self, forKey: CodingKeys.name)
         self.creator = try container.decode(String.self, forKey: CodingKeys.creator)
         self.members = try container.decode([String].self, forKey: CodingKeys.members)
+        self.password = try? container.decode(String.self, forKey: CodingKeys.password)
     }
     
     // Sample groups for development and testing

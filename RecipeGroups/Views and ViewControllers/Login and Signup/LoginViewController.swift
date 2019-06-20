@@ -46,7 +46,7 @@ class LoginViewController: UIViewController {
             self.removeActivityIndicator(activityBackgroundView: activityIndicatorBackground)
             
             if success {
-                self.performSegue(withIdentifier: "segueToMainVC", sender: nil)
+                self.navigationController?.popToRootViewController(animated: true)
             } else {
                 let alertController = UIAlertController(title: "Error", message: "Incorrect email or password", preferredStyle: .alert)
                 let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)

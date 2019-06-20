@@ -13,12 +13,20 @@ class UserController {
     static let shared = UserController()
     var user: User?
     let baseURL = Secret.shared.baseURL
+    var userIsLoggedIn = false
     
     func updateUser(name: String, email: String) {
         self.user = User(name: name, email: email)
         
+        userIsLoggedIn = true
         
-         
+        for recipe in RecipeController.shared.recipes {
+            if recipe.wasUploaded != true {
+                RecipeController.shared.sendRecipe(recipe: recipe)
+                recipe.wasUploaded = true
+            }
+        }
+        
         RecipeController.shared.fetchRecipes()
         GroupController.shared.fetchGroups()
     
@@ -106,15 +114,16 @@ class UserController {
         task.resume()
     }
     
-    func logoutUser(completionHandler: @escaping () -> ()) {
+    func logoutUser() {
         let url = baseURL.appendingPathComponent("logout")
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-            let jsonDecoder = JSONDecoder()
-            if let data = data,
-                let response = try? jsonDecoder.decode([String: String].self, from: data) {
-                DispatchQueue.main.async {
-                    completionHandler()
-                }
+            DispatchQueue.main.async {
+                self.userIsLoggedIn = false
+                UserController.shared.user = nil
+                GroupController.shared.groups = []
+                RecipeController.shared.recipes = RecipeController.shared.loadSavedRecipes() ?? []
+                NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
+                NotificationCenter.default.post(name: GroupController.groupDataUpdatedNotification, object: nil)
             }
         }
         task.resume()

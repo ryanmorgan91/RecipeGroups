@@ -21,5 +21,6 @@ class GroupNameTableViewCell: UITableViewCell {
     
     func setupCell() {
         groupImage.tintColor = CustomStyles.shared.customPink
+        groupLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
     }
 }

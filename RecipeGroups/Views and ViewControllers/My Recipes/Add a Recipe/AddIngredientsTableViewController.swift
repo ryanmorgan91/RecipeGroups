@@ -15,7 +15,7 @@ class AddIngredientsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationItem.rightBarButtonItem = editButtonItem
+        self.isEditing = true
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -54,8 +54,8 @@ class AddIngredientsTableViewController: UITableViewController {
             ingredients.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
-            ingredients.insert("", at: ingredients.count - 1)
-            tableView.insertRows(at: [IndexPath(row: ingredients.count - 1, section: 0)], with: .automatic)
+            ingredients.insert("", at: 0)
+            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
     }
     
@@ -76,6 +76,11 @@ class AddIngredientsTableViewController: UITableViewController {
                 counter += 1
             }
         }
+    }
+    
+    
+    @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
+        navigationController?.popViewController(animated: true)
     }
     
     override func encodeRestorableState(with coder: NSCoder) {

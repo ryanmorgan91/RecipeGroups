@@ -16,10 +16,13 @@ class ChildMenuTableViewController: UITableViewController {
     @IBOutlet weak var myGroupsButton: UIButton!
     @IBOutlet weak var myRecipesButton: UIButton!
     @IBOutlet weak var logoutButton: UIButton!
+    @IBOutlet weak var createAccountButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.tableFooterView = UIView()
+        setupView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -32,6 +35,20 @@ class ChildMenuTableViewController: UITableViewController {
         myGroupsButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         myRecipesButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         logoutButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        createAccountButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        if !UserController.shared.userIsLoggedIn {
+            logoutButton.setTitle("Login", for: .normal)
+        } else {
+            logoutButton.setTitle("Logout", for: .normal)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row == 4 && UserController.shared.userIsLoggedIn {
+            return 0
+        }
+        
+        return 62
     }
     
     // Notify the delegate when user taps Recipes button
@@ -53,4 +70,13 @@ class ChildMenuTableViewController: UITableViewController {
     @IBAction func logoutButtonTapped(_ sender: Any) {
         delegate?.userTapped(menuButton: "Logout")
     }
+    
+    
+    @IBAction func createAccountButtonTapped(_ sender: Any) {
+        
+        if !UserController.shared.userIsLoggedIn {
+            delegate?.userTapped(menuButton: "Create Account")
+        }
+    }
+    
 }

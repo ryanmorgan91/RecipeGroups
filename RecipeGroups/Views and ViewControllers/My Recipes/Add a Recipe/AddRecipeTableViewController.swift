@@ -68,6 +68,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     @IBOutlet weak var addImageLabel: UILabel!
     @IBOutlet weak var ingredientsLabel: UILabel!
     @IBOutlet weak var stepsLabel: UILabel!
+    @IBOutlet weak var cameraIcon: UIImageView!
     
     let categoryPickerViewIndexPath = IndexPath(row: 1, section: 3)
     let cookingTimePickerViewIndexPath = IndexPath(row: 3, section: 3)
@@ -128,6 +129,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         difficultyImageView.tintColor = CustomStyles.shared.customPink
         ingredientsImageView.tintColor = CustomStyles.shared.customPink
         stepImageView.tintColor = CustomStyles.shared.customPink
+        cameraIcon.tintColor = CustomStyles.shared.customPink
         addImageLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         titleTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         descriptionTextView.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
@@ -309,9 +311,13 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
             let email = UserController.shared.user?.email ?? ""
             
             let recipe = Recipe(name: titleTextField.text!, image: recipeImage!, cookTime: Recipe.CookTime(rawValue: cookingTimeLabel.text!)!, cookingDifficulty: Recipe.Difficulty(rawValue: difficultyLabel.text!)!, category: Recipe.Category(rawValue: categoryLabel.text!)!, description: descriptionTextView.text!, ingredients: ingredients, steps: steps, author: email)
-            RecipeController.shared.sendRecipe(recipe: recipe) {
-                self.dismiss(animated: true, completion: nil)
+            
+            if UserController.shared.userIsLoggedIn {
+                    RecipeController.shared.sendRecipe(recipe: recipe)
+                    recipe.wasUploaded = true
             }
+            RecipeController.shared.saveUserRecipe(recipe)
+            self.dismiss(animated: true, completion: nil)
         }
     }
     

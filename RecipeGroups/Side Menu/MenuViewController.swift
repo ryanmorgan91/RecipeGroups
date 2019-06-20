@@ -29,7 +29,11 @@ class MenuViewController: UIViewController {
     func setupView() {
         userNameLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         userNameLabel.text = UserController.shared.user?.name
-        userIcon.tintColor = CustomStyles.shared.customBlue
+        if UserController.shared.userIsLoggedIn {
+            userIcon.tintColor = CustomStyles.shared.customBlue
+        } else {
+            userIcon.tintColor = CustomStyles.shared.customGray
+        }
         userNameLabel.textColor = CustomStyles.shared.customBlue
     }
     

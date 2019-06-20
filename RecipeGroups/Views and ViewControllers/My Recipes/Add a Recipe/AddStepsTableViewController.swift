@@ -15,7 +15,7 @@ class AddStepsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.rightBarButtonItem = editButtonItem
+        self.isEditing = true
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -51,8 +51,8 @@ class AddStepsTableViewController: UITableViewController {
             steps.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
-            steps.insert("", at: steps.count - 1)
-            tableView.insertRows(at: [IndexPath(row: steps.count - 1, section: 0)], with: .automatic)
+            steps.insert("", at: 0)
+            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
     }
     
@@ -75,6 +75,10 @@ class AddStepsTableViewController: UITableViewController {
         }
     }
     
+    @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
+        
+        navigationController?.popViewController(animated: true)
+    }
     override func encodeRestorableState(with coder: NSCoder) {
         super.encodeRestorableState(with: coder)
         

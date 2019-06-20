@@ -21,6 +21,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let urlCache = URLCache(memoryCapacity: 25_000_000, diskCapacity: 50_000_000, diskPath: temporaryDirectory)
         URLCache.shared = urlCache
         
+        if RecipeController.shared.recipes.count == 0 {
+            if let savedRecipes = RecipeController.shared.loadSavedRecipes() {
+                RecipeController.shared.recipes = savedRecipes
+            }
+        }
+        
         return true
     }
     
@@ -37,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Add state restoration
     // If the user was saved during state restoration, load the user
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-
+        
         if let user = UserController.shared.loadUser() {
             UserController.shared.updateUser(name: user.name, email: user.email)
         }
