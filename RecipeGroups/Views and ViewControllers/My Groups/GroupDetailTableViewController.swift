@@ -20,8 +20,7 @@ class GroupDetailTableViewController: UITableViewController, MFMessageComposeVie
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        guard let group = group else { return 0 }
-        if group.password != nil {
+        if group?.creator == UserController.shared.user?.email {
             return 4
         } else {
             return 3
@@ -29,14 +28,13 @@ class GroupDetailTableViewController: UITableViewController, MFMessageComposeVie
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let group = group else { return 0 }
         
-        if group.password != nil {
+        if group?.creator == UserController.shared.user?.email {
             switch section {
             case 0, 1, 2:
                 return 1
             case 3:
-                return group.members.count
+                return group?.members.count ?? 0
             default:
                 return 0
             }
@@ -45,7 +43,7 @@ class GroupDetailTableViewController: UITableViewController, MFMessageComposeVie
             case 0, 1:
                 return 1
             case 2:
-                return group.members.count
+                return group?.members.count ?? 0
             default:
                 return 0
             }
@@ -61,14 +59,14 @@ class GroupDetailTableViewController: UITableViewController, MFMessageComposeVie
                 cell.groupLabel.text = group.name
                 return cell
             }
-        } else if indexPath.section == 1 && group.password != nil {
+        } else if indexPath.section == 1 && group.creator == UserController.shared.user?.email {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "GroupPasswordCell", for: indexPath) as? GroupPasswordTableViewCell {
                 cell.passwordLabel.text = group.password
                 return cell
             }
         } else {
             if let cell = tableView.dequeueReusableCell(withIdentifier: "GroupMemberCell", for: indexPath) as? GroupMemberTableViewCell {
-                if (indexPath.section == 1 && group.password == nil) || (indexPath.section == 2 && group.password != nil) {
+                if (indexPath.section == 1 && group.creator != UserController.shared.user?.email) || (indexPath.section == 2 && group.creator == UserController.shared.user?.email) {
                     cell.memberLabel.text = group.creator
                 } else {
                     cell.memberLabel.text = group.members[indexPath.row]
@@ -91,12 +89,12 @@ class GroupDetailTableViewController: UITableViewController, MFMessageComposeVie
         case 0:
             return groupName
         case 1:
-            if group?.password != nil {
+            if group?.creator == UserController.shared.user?.email {
                 return groupPassword
             }
             return creator
         case 2:
-            if group?.password != nil {
+            if group?.creator == UserController.shared.user?.email {
                 return creator
             }
             return groupMembers
@@ -106,7 +104,7 @@ class GroupDetailTableViewController: UITableViewController, MFMessageComposeVie
     }
     
     func setupView() {
-        if group?.password != nil {
+        if group?.creator == UserController.shared.user?.email {
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(creatorGroupActionTapped))
         } else {
             navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Leave Group", style: .plain, target: self, action: #selector(leaveGroupTapped))
