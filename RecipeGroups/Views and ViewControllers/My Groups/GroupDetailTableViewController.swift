@@ -165,14 +165,14 @@ class GroupDetailTableViewController: UITableViewController, MFMessageComposeVie
         
         // Send a request to the server to delete the group if the "Leave Group" button is tapped
         let leaveGroupAction = UIAlertAction(title: "Leave Group", style: .default) { (_) in
-            GroupController.shared.deleteGroup(named: self.group!.name, completion: { (result) in
+            GroupController.shared.leaveGroup(named: self.group!.name, completion: { (result) in
                 if result == "Success" {
-    
                     GroupController.shared.processLeaveGroup(named: self.group!.name)
                     self.navigationController?.popViewController(animated: true)
                 }
             })
         }
+        
         alertController.addAction(cancelAction)
         alertController.addAction(leaveGroupAction)
         present(alertController, animated: true, completion: nil)
