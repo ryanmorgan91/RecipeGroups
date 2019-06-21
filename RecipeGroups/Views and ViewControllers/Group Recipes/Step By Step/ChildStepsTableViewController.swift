@@ -16,8 +16,8 @@ class ChildStepsTableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.separatorStyle = .none
         
-        tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 44
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
