@@ -314,9 +314,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
             
             if UserController.shared.userIsLoggedIn {
                     RecipeController.shared.sendRecipe(recipe: recipe)
-                    recipe.wasUploaded = true
             }
-            RecipeController.shared.saveUserRecipe(recipe)
             self.dismiss(animated: true, completion: nil)
         }
     }

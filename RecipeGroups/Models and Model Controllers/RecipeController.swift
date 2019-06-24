@@ -16,6 +16,8 @@ class RecipeController {
     static let recipeDataUpdatedNotification = Notification.Name("RecipeController.recipeDataUpdated")
     
     var recipes: [Recipe] = []
+    var savedRecipes: [Recipe] = []
+    var likedRecipes: [Recipe] = []
     let baseURL = Secret.shared.baseURL
 
     func sendRecipe(recipe: Recipe) {
@@ -48,12 +50,8 @@ class RecipeController {
         request.httpBody = createBody(parameters: textData, arrayParameters: arrayParameters, boundary: boundary, data: imageData, mimeType: "image/jpg", filename: imageFileName)
         
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            let jsonDecoder = JSONDecoder()
-            if let data = data,
-                let recipe = try? jsonDecoder.decode(Recipe.self, from: data) {
-                DispatchQueue.main.async {
-                    self.processNew(recipe: recipe)
-                }
+            DispatchQueue.main.async {
+                self.processNew(recipe: recipe)
             }
         }
         task.resume()
@@ -112,6 +110,8 @@ class RecipeController {
     
     func processNew(recipe: Recipe) {
         self.recipes.insert(recipe, at: 0)
+        recipe.wasUploaded = true
+        RecipeController.shared.saveUserRecipe(recipe)
         NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
     }
     
@@ -140,23 +140,25 @@ class RecipeController {
     }
     
     
-    func loadLikedRecipes() -> [Recipe]? {
+    func loadLikedRecipes() {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let likedRecipeFileURL = documentsDirectoryURL.appendingPathComponent("likedRecipe").appendingPathExtension("json")
-        guard let data = try? Data(contentsOf: likedRecipeFileURL) else { return nil }
+        guard let data = try? Data(contentsOf: likedRecipeFileURL) else { return }
         let jsonDecoder = JSONDecoder()
-        if let likedRecipes = try? jsonDecoder.decode([Recipe].self, from: data) {
-            return likedRecipes
+        if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
+            likedRecipes = recipes
+            print("Test loading liked recipe")
         }
-        return nil
     }
     
     func saveLikedRecipe(_ recipe: Recipe) {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let likedRecipeFileURL = documentsDirectoryURL.appendingPathComponent("likedRecipe").appendingPathExtension("json")
         let jsonEncoder = JSONEncoder()
-        if let data = try? jsonEncoder.encode(recipe) {
+        likedRecipes.append(recipe)
+        if let data = try? jsonEncoder.encode(likedRecipes) {
             try? data.write(to: likedRecipeFileURL)
+            print("Test saving liked recipe")
         }
     }
     
@@ -164,20 +166,21 @@ class RecipeController {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
         let jsonEncoder = JSONEncoder()
-        if let data = try? jsonEncoder.encode(recipe) {
+        savedRecipes.append(recipe)
+        if let data = try? jsonEncoder.encode(savedRecipes) {
             try? data.write(to: recipeFileURL)
+            print("Test saving recipe")
         }
     }
     
-    func loadSavedRecipes() -> [Recipe]? {
+    func loadSavedRecipes() {
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
-        guard let data = try? Data(contentsOf: recipeFileURL) else { return nil }
+        guard let data = try? Data(contentsOf: recipeFileURL) else { return }
         let jsonDecoder = JSONDecoder()
         if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
-            
-            return recipes
+            print("Test loading saved recipe")
+            savedRecipes = recipes
         }
-        return nil
     }
 }

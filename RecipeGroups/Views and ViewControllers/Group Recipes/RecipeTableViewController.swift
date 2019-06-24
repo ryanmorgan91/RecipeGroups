@@ -21,7 +21,7 @@ class RecipeTableViewController: UITableViewController {
         setupView()
         updateUI()
     }
-
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return recipes.count
     }
@@ -61,16 +61,21 @@ class RecipeTableViewController: UITableViewController {
     func configure(_ cell: RecipeTableViewCell, forItemAt indexPath: IndexPath) {
         let recipe = recipes[indexPath.section]
         cell.recipeLabel.text = recipe.name
-        RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
-            guard let image = image else { return }
-            DispatchQueue.main.async {
-                if let currentIndexPath = self.tableView.indexPath(for: cell),
-                    currentIndexPath != indexPath {
-                    return
+        if recipe.image != nil {
+            cell.recipeImage.image = recipe.image
+            cell.setNeedsLayout()
+        } else {
+            RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
+                guard let image = image else { return }
+                DispatchQueue.main.async {
+                    if let currentIndexPath = self.tableView.indexPath(for: cell),
+                        currentIndexPath != indexPath {
+                        return
+                    }
+                    cell.recipeImage.image = image
+                    cell.setNeedsLayout()
+                    recipe.image = image
                 }
-                cell.recipeImage.image = image
-                cell.setNeedsLayout()
-                recipe.image = image
             }
         }
     }

@@ -15,7 +15,9 @@ class MyRecipesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         setupView()
         updateUI()
     }
@@ -51,13 +53,8 @@ class MyRecipesTableViewController: UITableViewController {
     
     func updateUI() {
         
-        if let savedRecipes = RecipeController.shared.loadSavedRecipes() {
-            self.recipes = savedRecipes
-        }
-        
-        if let likedRecipes = RecipeController.shared.loadLikedRecipes() {
-            self.recipes += likedRecipes
-        }
+        self.recipes = RecipeController.shared.savedRecipes
+        self.recipes += RecipeController.shared.likedRecipes
         
         self.tableView.reloadData()
     }
@@ -65,16 +62,21 @@ class MyRecipesTableViewController: UITableViewController {
     func configure(_ cell: MyRecipesTableViewCell, forItemAt indexPath: IndexPath) {
         let recipe = recipes[indexPath.section]
         cell.recipeLabel.text = recipe.name
-        RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
-            guard let image = image else { return }
-            DispatchQueue.main.async {
-                if let currentIndexPath = self.tableView.indexPath(for: cell),
-                    currentIndexPath != indexPath {
-                    return
+        if recipe.image != nil {
+            cell.recipeImage.image = recipe.image
+            cell.setNeedsLayout()
+        } else {
+            RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
+                guard let image = image else { return }
+                DispatchQueue.main.async {
+                    if let currentIndexPath = self.tableView.indexPath(for: cell),
+                        currentIndexPath != indexPath {
+                        return
+                    }
+                    cell.recipeImage.image = image
+                    recipe.image = image
+                    cell.setNeedsLayout()
                 }
-                cell.recipeImage.image = image
-                recipe.image = image
-                cell.setNeedsLayout()
             }
         }
     }

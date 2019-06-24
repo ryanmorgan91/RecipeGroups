@@ -121,7 +121,8 @@ class UserController {
                 self.userIsLoggedIn = false
                 UserController.shared.user = nil
                 GroupController.shared.groups = []
-                RecipeController.shared.recipes = RecipeController.shared.loadSavedRecipes() ?? []
+                RecipeController.shared.recipes = RecipeController.shared.savedRecipes
+                RecipeController.shared.recipes += RecipeController.shared.likedRecipes
                 NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
                 NotificationCenter.default.post(name: GroupController.groupDataUpdatedNotification, object: nil)
             }

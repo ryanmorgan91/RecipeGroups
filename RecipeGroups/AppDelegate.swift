@@ -22,9 +22,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         URLCache.shared = urlCache
         
         if RecipeController.shared.recipes.count == 0 {
-            if let savedRecipes = RecipeController.shared.loadSavedRecipes() {
-                RecipeController.shared.recipes = savedRecipes
+            RecipeController.shared.loadSavedRecipes()
+            RecipeController.shared.loadLikedRecipes()
+            
+            // Load liked recipes
+            for recipe in RecipeController.shared.likedRecipes {
+                RecipeController.shared.recipes.append(recipe)
             }
+            
+            // Load saved recipes
+            for recipe in RecipeController.shared.savedRecipes {
+                RecipeController.shared.recipes.append(recipe)
+            }
+            
+            NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
         }
         
         return true
