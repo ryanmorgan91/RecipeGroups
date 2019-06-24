@@ -170,6 +170,15 @@ class RecipeDetailViewController: UIViewController {
         alertController.addAction(pdfAction)
         alertController.addAction(cancelAction)
         alertController.addAction(shareAction)
+        if recipe?.author == UserController.shared.user?.email {
+            let editRecipeAction = UIAlertAction(title: "Edit Recipe", style: .default) { (_) in
+                if let addRecipeNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "AddRecipeNav") as? UINavigationController {
+                    self.present(addRecipeNavigationController, animated: true, completion: nil)
+                }
+            }
+            alertController.addAction(editRecipeAction)
+        }
+        
         present(alertController, animated: true, completion: nil)
     }
     
