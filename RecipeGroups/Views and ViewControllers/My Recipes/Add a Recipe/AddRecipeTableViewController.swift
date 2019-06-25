@@ -302,12 +302,19 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
             let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
             alertController.addAction(alertAction)
             present(alertController, animated: true, completion: nil)
-        } else if RecipeController.shared.recipes.contains(where: { $0.name == titleTextField.text! }) {
-            let alertController = UIAlertController(title: "Oops", message: "You cannot have two recipes with the same name", preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-            alertController.addAction(alertAction)
-            present(alertController, animated: true, completion: nil)
         } else {
+            // Check if the user already has a recipe with the same name
+            if RecipeController.shared.savedRecipes.contains(where: { $0.name == titleTextField.text! }) {
+                let alertController = UIAlertController(title: "Oops", message: "You cannot have two recipes with the same name. If you continue, you will save over the recipe with the same name.", preferredStyle: .alert)
+                let continueAction = UIAlertAction(title: "Continue", style: .default, handler: nil)
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+                    return
+                }
+                alertController.addAction(continueAction)
+                alertController.addAction(cancelAction)
+                present(alertController, animated: true, completion: nil)
+            }
+            
             let email = UserController.shared.user?.email ?? ""
             
             let recipe = Recipe(name: titleTextField.text!, image: recipeImage!, cookTime: Recipe.CookTime(rawValue: cookingTimeLabel.text!)!, cookingDifficulty: Recipe.Difficulty(rawValue: difficultyLabel.text!)!, category: Recipe.Category(rawValue: categoryLabel.text!)!, description: descriptionTextView.text!, ingredients: ingredients, steps: steps, author: email)
