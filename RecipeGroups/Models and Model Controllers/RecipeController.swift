@@ -115,6 +115,12 @@ class RecipeController {
         NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
     }
     
+    func processRecipeIfUserIsNone(recipe: Recipe) {
+        self.recipes.insert(recipe, at: 0)
+        RecipeController.shared.saveUserRecipe(recipe)
+        NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
+    }
+    
     func fetchRecipes() {
         let url = baseURL.appendingPathComponent("get_recipes_by_groups")
         
@@ -148,6 +154,9 @@ class RecipeController {
         if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
             likedRecipes = recipes
             print("Test loading liked recipe")
+            for recipe in recipes {
+                loadLocalImage(for: recipe)
+            }
         }
     }
     
@@ -156,6 +165,7 @@ class RecipeController {
         let likedRecipeFileURL = documentsDirectoryURL.appendingPathComponent("likedRecipe").appendingPathExtension("json")
         let jsonEncoder = JSONEncoder()
         likedRecipes.append(recipe)
+        saveImage(from: recipe)
         if let data = try? jsonEncoder.encode(likedRecipes) {
             try? data.write(to: likedRecipeFileURL)
             print("Test saving liked recipe")
@@ -167,6 +177,7 @@ class RecipeController {
         let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
         let jsonEncoder = JSONEncoder()
         savedRecipes.append(recipe)
+        saveImage(from: recipe)
         if let data = try? jsonEncoder.encode(savedRecipes) {
             try? data.write(to: recipeFileURL)
             print("Test saving recipe")
@@ -174,6 +185,7 @@ class RecipeController {
     }
     
     func loadSavedRecipes() {
+        
         let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
         guard let data = try? Data(contentsOf: recipeFileURL) else { return }
@@ -181,6 +193,32 @@ class RecipeController {
         if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
             print("Test loading saved recipe")
             savedRecipes = recipes
+            for recipe in recipes {
+                loadLocalImage(for: recipe)
+            }
         }
+    }
+    
+    func saveImage(from recipe: Recipe) {
+        guard let image = recipe.image else { return }
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileName = "\(recipe.name + recipe.author).jpeg"
+        let imageURL = documentsDirectoryURL.appendingPathComponent("\(fileName)")
+        guard let data = image.jpegData(compressionQuality: 1.0) else { return }
+        
+        if !FileManager.default.fileExists(atPath: imageURL.path) {
+            do {
+                try data.write(to: imageURL)
+            } catch {
+                print("Error in writing image data")
+            }
+        }
+        
+        recipe.localImageURL = imageURL
+    }
+    
+    func loadLocalImage(for recipe: Recipe) {
+        guard let imageURL = recipe.localImageURL else { return }
+        recipe.image = UIImage(contentsOfFile: imageURL.path)
     }
 }

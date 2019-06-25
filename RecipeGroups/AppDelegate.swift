@@ -21,23 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let urlCache = URLCache(memoryCapacity: 25_000_000, diskCapacity: 50_000_000, diskPath: temporaryDirectory)
         URLCache.shared = urlCache
         
-        if RecipeController.shared.recipes.count == 0 {
-            RecipeController.shared.loadSavedRecipes()
-            RecipeController.shared.loadLikedRecipes()
-            
-            // Load liked recipes
-            for recipe in RecipeController.shared.likedRecipes {
-                RecipeController.shared.recipes.append(recipe)
-            }
-            
-            // Load saved recipes
-            for recipe in RecipeController.shared.savedRecipes {
-                RecipeController.shared.recipes.append(recipe)
-            }
-            
-            NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
-        }
-        
         return true
     }
     
@@ -54,6 +37,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Add state restoration
     // If the user was saved during state restoration, load the user
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        
+        if RecipeController.shared.recipes.count == 0 {
+            print("test")
+            
+            RecipeController.shared.loadSavedRecipes()
+            RecipeController.shared.loadLikedRecipes()
+            
+            // Load liked recipes
+            for recipe in RecipeController.shared.likedRecipes {
+                RecipeController.shared.recipes.append(recipe)
+            }
+            
+            // Load saved recipes
+            for recipe in RecipeController.shared.savedRecipes {
+                RecipeController.shared.recipes.append(recipe)
+            }
+            
+            NotificationCenter.default.post(name: RecipeController.recipeDataUpdatedNotification, object: nil)
+        }
         
         if let user = UserController.shared.loadUser() {
             UserController.shared.updateUser(name: user.name, email: user.email)

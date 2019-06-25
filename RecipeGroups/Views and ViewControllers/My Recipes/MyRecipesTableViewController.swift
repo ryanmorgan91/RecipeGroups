@@ -15,9 +15,11 @@ class MyRecipesTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: RecipeController.recipeDataUpdatedNotification, object: nil)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         setupView()
         updateUI()
     }
@@ -51,7 +53,7 @@ class MyRecipesTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem?.tintColor = CustomStyles.shared.customPink
     }
     
-    func updateUI() {
+    @objc func updateUI() {
         
         self.recipes = RecipeController.shared.savedRecipes
         self.recipes += RecipeController.shared.likedRecipes
