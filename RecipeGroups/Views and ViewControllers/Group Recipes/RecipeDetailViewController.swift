@@ -170,14 +170,23 @@ class RecipeDetailViewController: UIViewController {
         alertController.addAction(pdfAction)
         alertController.addAction(cancelAction)
         alertController.addAction(shareAction)
-        if recipe?.author == UserController.shared.user?.email {
-            let editRecipeAction = UIAlertAction(title: "Edit Recipe", style: .default) { (_) in
-                if let addRecipeNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "AddRecipeNav") as? UINavigationController {
-                    self.present(addRecipeNavigationController, animated: true, completion: nil)
-                }
-            }
-            alertController.addAction(editRecipeAction)
-        }
+//        if recipe?.author == UserController.shared.user?.email {
+//            let editRecipeAction = UIAlertAction(title: "Edit Recipe", style: .default) { (_) in
+//                if let addRecipeNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "AddRecipeNav") as? UINavigationController {
+//                    self.present(addRecipeNavigationController, animated: true, completion: nil)
+//                }
+//            }
+//            alertController.addAction(editRecipeAction)
+//            
+//            // Let recipe author delete the recipe only if the user is logged in
+//            if UserController.shared.userIsLoggedIn {
+//                let deleteRecipeAction = UIAlertAction(title: "Delete Recipe", style: .default) { (_) in
+//                    
+//                }
+//                alertController.addAction(deleteRecipeAction)
+//            }
+//            
+//        }
         
         present(alertController, animated: true, completion: nil)
     }

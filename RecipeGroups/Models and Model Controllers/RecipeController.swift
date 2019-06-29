@@ -153,7 +153,6 @@ class RecipeController {
         let jsonDecoder = JSONDecoder()
         if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
             likedRecipes = recipes
-            print("Test loading liked recipe")
             for recipe in recipes {
                 loadLocalImage(for: recipe)
             }
@@ -168,7 +167,6 @@ class RecipeController {
         saveImage(from: recipe)
         if let data = try? jsonEncoder.encode(likedRecipes) {
             try? data.write(to: likedRecipeFileURL)
-            print("Test saving liked recipe")
         }
     }
     
@@ -180,7 +178,6 @@ class RecipeController {
         saveImage(from: recipe)
         if let data = try? jsonEncoder.encode(savedRecipes) {
             try? data.write(to: recipeFileURL)
-            print("Test saving recipe")
         }
     }
     
@@ -191,7 +188,6 @@ class RecipeController {
         guard let data = try? Data(contentsOf: recipeFileURL) else { return }
         let jsonDecoder = JSONDecoder()
         if let recipes = try? jsonDecoder.decode([Recipe].self, from: data) {
-            print("Test loading saved recipe")
             savedRecipes = recipes
             for recipe in recipes {
                 loadLocalImage(for: recipe)
@@ -220,5 +216,68 @@ class RecipeController {
     func loadLocalImage(for recipe: Recipe) {
         guard let imageURL = recipe.localImageURL else { return }
         recipe.image = UIImage(contentsOfFile: imageURL.path)
+    }
+    
+    func delete(recipe: Recipe) {
+        
+        // Delete the locally saved recipe image
+        if let recipeImageURL = recipe.localImageURL {
+            do {
+                try FileManager.default.removeItem(atPath: recipeImageURL.path)
+            } catch {
+                print("Error removing image file")
+            }
+        }
+        
+        // remove the recipe from the savedRecipes array
+        savedRecipes.removeAll { $0.name == recipe.name }
+        
+        // save the savedRecipes array
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let recipeFileURL = documentsDirectoryURL.appendingPathComponent("recipe").appendingPathExtension("json")
+        let jsonEncoder = JSONEncoder()
+        if let data = try? jsonEncoder.encode(savedRecipes) {
+            try? data.write(to: recipeFileURL)
+        }
+        
+        // Tell the server to delete the recipe
+        
+    }
+    
+    func deleteRecipeFromServer(recipeNamed recipeName: String, completion: @escaping (String) -> ()) {
+        guard let email = UserController.shared.user?.email else { return }
+        
+        let url = baseURL.appendingPathComponent("delete_recipe")
+        let sentData: [String: String] = ["recipeName": recipeName, "email": email]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        
+    }
+    
+    
+    func deleteGroup(named groupName: String, completion: @escaping (String) -> ()) {
+        let url = baseURL.appendingPathComponent("delete_group")
+        let sentData: [String: String] = ["group": groupName]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        
+        let jsonEncoder = JSONEncoder()
+        let jsonData = try? jsonEncoder.encode(sentData)
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            let jsonDecoder = JSONDecoder()
+            if let data = data,
+                let response = try? jsonDecoder.decode([String: String].self, from: data),
+                let result = response["Result"] {
+                DispatchQueue.main.async {
+                    completion(result)
+                }
+            }
+        }
+        task.resume()
     }
 }
