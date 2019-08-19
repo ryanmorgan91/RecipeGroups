@@ -55,8 +55,25 @@ class MyRecipesTableViewController: UITableViewController {
     
     @objc func updateUI() {
         
-        self.recipes = RecipeController.shared.savedRecipes
-        self.recipes += RecipeController.shared.likedRecipes
+        self.recipes = []
+        
+        let allRecipes = RecipeController.shared.recipes
+        
+        // Only include recipes creates or liked by the user
+        for recipe in allRecipes {
+            if recipe.author == UserController.shared.user?.email || recipe.author == "" ||
+                recipe.author == "thisDevice" {
+                
+                self.recipes.append(recipe)
+                
+            } else {
+                if let isLiked = recipe.isLiked {
+                    self.recipes.append(recipe)
+                } else if let wasUploaded = recipe.wasUploaded {
+                    self.recipes.append(recipe)
+                }
+            }
+        }
         
         self.tableView.reloadData()
     }
@@ -67,7 +84,7 @@ class MyRecipesTableViewController: UITableViewController {
         if recipe.image != nil {
             cell.recipeImage.image = recipe.image
             cell.setNeedsLayout()
-        } else {
+        } else if recipe.imageURL != nil {
             RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
                 guard let image = image else { return }
                 DispatchQueue.main.async {
@@ -80,6 +97,8 @@ class MyRecipesTableViewController: UITableViewController {
                     cell.setNeedsLayout()
                 }
             }
+        } else {
+            print("Error, no recipe image")
         }
     }
     

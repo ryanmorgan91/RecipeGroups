@@ -51,8 +51,8 @@ class AddStepsTableViewController: UITableViewController {
             steps.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
-            steps.insert("", at: 0)
-            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            steps.insert("", at: steps.count)
+            tableView.insertRows(at: [IndexPath(row: steps.count - 1, section: 0)], with: .automatic)
         }
     }
     

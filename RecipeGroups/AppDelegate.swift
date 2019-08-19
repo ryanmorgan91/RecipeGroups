@@ -39,7 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         if RecipeController.shared.recipes.count == 0 {
-            print("test")
             
             RecipeController.shared.loadSavedRecipes()
             RecipeController.shared.loadLikedRecipes()

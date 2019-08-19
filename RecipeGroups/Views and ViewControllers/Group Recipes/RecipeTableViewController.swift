@@ -12,12 +12,16 @@ class RecipeTableViewController: UITableViewController {
 
     let interactor = Interactor()
     var recipes: [Recipe] = []
+    var alreadyProvidedLoginSuggestion = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+     
         NotificationCenter.default.addObserver(self, selector: #selector(updateUI), name: RecipeController.recipeDataUpdatedNotification, object: nil)
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         setupView()
         updateUI()
     }
@@ -64,7 +68,7 @@ class RecipeTableViewController: UITableViewController {
         if recipe.image != nil {
             cell.recipeImage.image = recipe.image
             cell.setNeedsLayout()
-        } else {
+        } else if recipe.imageURL != nil {
             RecipeController.shared.fetchImage(url: recipe.imageURL!) { (image) in
                 guard let image = image else { return }
                 DispatchQueue.main.async {
@@ -77,6 +81,8 @@ class RecipeTableViewController: UITableViewController {
                     recipe.image = image
                 }
             }
+        } else {
+            print("Error, no recipe image")
         }
     }
     
@@ -104,8 +110,29 @@ class RecipeTableViewController: UITableViewController {
     
     
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
-        if let addRecipeNavigationController = storyboard?.instantiateViewController(withIdentifier: "AddRecipeNav") as? UINavigationController {
-            self.present(addRecipeNavigationController, animated: true, completion: nil)
+        if !UserController.shared.userIsLoggedIn && !alreadyProvidedLoginSuggestion {
+            alreadyProvidedLoginSuggestion = true
+            
+            let loginSuggestionAlertController = UIAlertController(title: "Consider Logging In", message: "You are not logged in. More features will be available to you if you login to this app.", preferredStyle: .alert)
+            
+            // Let user continue to the next view controller
+            let continueAction = UIAlertAction(title: "Continue", style: .default) { (_) in
+                
+                if let addRecipeNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "AddRecipeNav") as? UINavigationController {
+                    self.present(addRecipeNavigationController, animated: true, completion: nil)
+                }
+            }
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+            
+            loginSuggestionAlertController.addAction(continueAction)
+            loginSuggestionAlertController.addAction(cancelAction)
+            
+            present(loginSuggestionAlertController, animated: true, completion: nil)
+        } else {
+            if let addRecipeNavigationController = storyboard?.instantiateViewController(withIdentifier: "AddRecipeNav") as? UINavigationController {
+                self.present(addRecipeNavigationController, animated: true, completion: nil)
+            }
         }
     }
 }

@@ -43,6 +43,12 @@ class RecipeDetailViewController: UIViewController {
     @IBOutlet weak var ingredientsButton: UIButton!
     @IBOutlet weak var stepsButton: UIButton!
     
+    // Constraint outlets
+    @IBOutlet weak var containerViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var likeButtonStackViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var likeButtonStackView: UIStackView!
+    
+    
     var recipe: Recipe?
     var showSteps: Bool = true
     
@@ -55,6 +61,15 @@ class RecipeDetailViewController: UIViewController {
         childSteps.steps = recipe.steps
         childSteps.tableView.reloadData()
         setupView()
+    }
+    
+    override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        super.preferredContentSizeDidChange(forChildContentContainer: container)
+        if (container as? ChildStepsTableViewController) != nil {
+            containerViewHeight.constant = container.preferredContentSize.height
+        } else if (container as? ChildIngredientsTableViewController) != nil {
+            containerViewHeight.constant = container.preferredContentSize.height
+        }
     }
     
     func setupCustomSwitch() {
@@ -144,6 +159,29 @@ class RecipeDetailViewController: UIViewController {
         likeButton.titleLabel?.font = UIFont(name: CustomStyles.shared.customFontNameWide, size: 17)
         descriptionLabel.textColor = UIColor.gray
         
+        // Hide like button if the recipe is the current user's recipe
+        if (UserController.shared.userIsLoggedIn && recipe.author == UserController.shared.user?.email)
+            || recipe.author == "thisDevice" {
+            
+            likeButton.isHidden = true
+            likeButtonStackView.isHidden = true
+            likeButtonStackView.frame.size.height = 0
+            likeButton.frame.size.height = 0
+            likeButton.clipsToBounds = true
+            
+            self.view.layoutIfNeeded()
+
+        } else {
+            
+            // If the recipe was uploaded (i.e., it is the user's recipe), hide the like button
+            if let wasUploaded = recipe.wasUploaded {
+                if wasUploaded {
+                    likeButton.isHidden = true
+                }
+            }
+        }
+        
+        
         if let isLiked = recipe.isLiked {
             likeButton.isSelected = isLiked
         }
@@ -170,25 +208,79 @@ class RecipeDetailViewController: UIViewController {
         alertController.addAction(pdfAction)
         alertController.addAction(cancelAction)
         alertController.addAction(shareAction)
-//        if recipe?.author == UserController.shared.user?.email {
-//            let editRecipeAction = UIAlertAction(title: "Edit Recipe", style: .default) { (_) in
-//                if let addRecipeNavigationController = self.storyboard?.instantiateViewController(withIdentifier: "AddRecipeNav") as? UINavigationController {
-//                    self.present(addRecipeNavigationController, animated: true, completion: nil)
-//                }
-//            }
-//            alertController.addAction(editRecipeAction)
-//            
-//            // Let recipe author delete the recipe only if the user is logged in
-//            if UserController.shared.userIsLoggedIn {
-//                let deleteRecipeAction = UIAlertAction(title: "Delete Recipe", style: .default) { (_) in
-//                    
-//                }
-//                alertController.addAction(deleteRecipeAction)
-//            }
-//            
-//        }
+        
+        if recipe?.author == UserController.shared.user?.email || recipe?.author == "thisDevice" {
+            
+            let editRecipeAction = UIAlertAction(title: "Edit Recipe", style: .default) { (_) in
+                self.editRecipe()
+            }
+            alertController.addAction(editRecipeAction)
+
+            if let recipe = recipe {
+                let deleteRecipeAction = UIAlertAction(title: "Delete Recipe", style: .default) { (_) in
+                        
+                    self.confirmAndDeleteRecipe(recipe)
+                }
+                alertController.addAction(deleteRecipeAction)
+            }
+        }
         
         present(alertController, animated: true, completion: nil)
+    }
+    
+    func editRecipe() {
+        
+        // Only allow logged in users to edit recipes
+        if !UserController.shared.userIsLoggedIn {
+            tellUserToLogIn()
+            return
+        }
+        
+        if let addRecipeTableViewController = self.storyboard?.instantiateViewController(withIdentifier: "AddRecipeTableViewController") as? AddRecipeTableViewController {
+            
+            guard let recipe = self.recipe else { return }
+            addRecipeTableViewController.isEditingRecipe = true
+            addRecipeTableViewController.recipeBeingEdited = recipe
+            
+            self.navigationController?.pushViewController(addRecipeTableViewController, animated: true)
+            
+        }
+    }
+    
+    func tellUserToLogIn() {
+        let loginAlertController = UIAlertController(title: "Please Log In", message: "Sorry, you must be logged in to access this feature.", preferredStyle: .alert)
+        let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+        loginAlertController.addAction(dismissAction)
+        
+        self.present(loginAlertController, animated: true, completion: nil)
+    }
+    
+    func confirmAndDeleteRecipe(_ recipe: Recipe) {
+        
+        // Only allow logged in users to delete recipes
+        if !UserController.shared.userIsLoggedIn {
+            tellUserToLogIn()
+            return
+        }
+        
+        let confirmDeleteController = UIAlertController(title: "Confirm", message: "Are you sure you want to delete this recipe?", preferredStyle: .alert)
+        
+        // Prompt the user to confirm that they want to delete the recipe
+        let confirmDeleteAction = UIAlertAction(title: "Yes", style: .default, handler: { (_) in
+            RecipeController.shared.delete(recipe: recipe)
+            RecipeController.shared.deleteRecipeFromServer(recipe: recipe, completion: { (result) in
+                print(result)
+                self.navigationController?.popViewController(animated: true)
+            })
+        })
+        
+        // Let the user cancel deletion of the recipe
+        let cancelDeleteAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        confirmDeleteController.addAction(confirmDeleteAction)
+        confirmDeleteController.addAction(cancelDeleteAction)
+        
+        self.present(confirmDeleteController, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -205,8 +297,20 @@ class RecipeDetailViewController: UIViewController {
             recipe.isLiked = !isLiked
             likeButton.isSelected = recipe.isLiked!
             
+            if !isLiked {
+                // If optional isLiked value was previously nil, set isLiked to true and save the recipe locally
+                recipe.isLiked = true
+                likeButton.isSelected = true
+                RecipeController.shared.saveLikedRecipe(recipe)
+            } else {
+                
+                recipe.isLiked = false
+                likeButton.isSelected = false
+                RecipeController.shared.delete(recipe: recipe)
+            }
+            
         } else {
-            // If optional isLiked value was previously nil, set isLiked o true and save the recipe locally
+            // If optional isLiked value was previously nil, set isLiked to true and save the recipe locally
             recipe.isLiked = true
             likeButton.isSelected = true
             RecipeController.shared.saveLikedRecipe(recipe)

@@ -22,8 +22,14 @@ class UserController {
         
         for recipe in RecipeController.shared.recipes {
             if recipe.wasUploaded != true {
-                RecipeController.shared.sendRecipe(recipe: recipe)
-                recipe.wasUploaded = true
+                
+                // Delete the previous version of the recipe
+                RecipeController.shared.delete(recipe: recipe)
+                recipe.author = email
+
+                RecipeController.shared.sendRecipe(recipe: recipe) {
+                    // Empty
+                }
             }
         }
         

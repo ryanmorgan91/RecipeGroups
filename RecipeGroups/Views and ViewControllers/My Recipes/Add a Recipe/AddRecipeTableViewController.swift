@@ -8,6 +8,16 @@
 
 import UIKit
 
+extension UITextView {
+    func centerVertically() {
+        let fittingSize = CGSize(width: bounds.width, height: CGFloat.greatestFiniteMagnitude)
+        let size = sizeThatFits(fittingSize)
+        let topOffset = (bounds.size.height - size.height * zoomScale) / 2
+        let positiveTopOffset = max(1, topOffset)
+        contentOffset.y = -positiveTopOffset
+    }
+}
+
 extension AddRecipeTableViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     // Appropriately respond to user tapping the recipe image based on the available image sources
@@ -47,7 +57,7 @@ extension AddRecipeTableViewController: UIImagePickerControllerDelegate, UINavig
     }
 }
 
-class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextViewDelegate {
 
     @IBOutlet weak var recipeImageView: UIImageView!
     @IBOutlet weak var titleTextField: UITextField!
@@ -78,6 +88,8 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     let ingredientsIndexPath = IndexPath(row: 0, section: 4)
     let stepsIndexPath = IndexPath(row: 1, section: 4)
     var recipeDict: [String: Any] = [:]
+    var isEditingRecipe: Bool = false
+    var recipeBeingEdited: Recipe?
     
     var isCategoryPickerShown: Bool = false {
         didSet {
@@ -109,6 +121,10 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     // Fixes a bug related to reloading tableViews and losing the current scroll position
     var currentScrollPosition: CGFloat?
     
+    override func viewDidLayoutSubviews() {
+        descriptionTextView.centerVertically()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -116,20 +132,25 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     }
     
     func setupView() {
+        
+        // Set delegates and dataSources
         categoryPickerView.delegate = self
         categoryPickerView.dataSource = self
         cookingTimePickerView.delegate = self
         cookingTimePickerView.dataSource = self
         difficultyPickerView.delegate = self
         difficultyPickerView.dataSource = self
+        descriptionTextView.delegate = self
+        
+        // Set colors
         titleImageView.tintColor = CustomStyles.shared.customPink
-        descriptionImageView.tintColor = CustomStyles.shared.customPink
         categoryImageView.tintColor = CustomStyles.shared.customPink
         cookTimeImageView.tintColor = CustomStyles.shared.customPink
         difficultyImageView.tintColor = CustomStyles.shared.customPink
         ingredientsImageView.tintColor = CustomStyles.shared.customPink
         stepImageView.tintColor = CustomStyles.shared.customPink
         cameraIcon.tintColor = CustomStyles.shared.customPink
+        descriptionTextView.tintColor = CustomStyles.shared.customPink
         addImageLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         titleTextField.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         descriptionTextView.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
@@ -138,6 +159,23 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         difficultyLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         ingredientsLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
         stepsLabel.font = UIFont(name: CustomStyles.shared.customFontName, size: 17)
+        
+        // Add placeholder for UITextView
+        if !isEditingRecipe {
+            descriptionTextView.text = "Description"
+            descriptionTextView.textColor = UIColor.lightGray
+        }
+        
+        if isEditingRecipe {
+            setupRecipeEditing()
+        }
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
+            textView.text = nil
+            textView.textColor = UIColor.black
+        }
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -209,6 +247,10 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     }
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
+        if isEditingRecipe {
+            navigationController?.popViewController(animated: true)
+        }
+        
         dismiss(animated: true, completion: nil)
     }
     
@@ -294,7 +336,7 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
     // Check if all fields have been filled out
     @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
         if (steps == [""]) || (ingredients == [""]) || (recipeImage == nil) || (titleTextField.text == "") ||
-            (descriptionTextView.text == "Description" || descriptionTextView.text == "") ||
+            (descriptionTextView.text == "") || (descriptionTextView.text == "Description") ||
             (categoryLabel.text == "Category") || (cookingTimeLabel.text == "Preparation Time") ||
             (difficultyLabel.text == "Difficulty")
         {
@@ -304,26 +346,59 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
             present(alertController, animated: true, completion: nil)
         } else {
             // Check if the user already has a recipe with the same name
-            if RecipeController.shared.savedRecipes.contains(where: { $0.name == titleTextField.text! }) {
-                let alertController = UIAlertController(title: "Oops", message: "You cannot have two recipes with the same name. If you continue, you will save over the recipe with the same name.", preferredStyle: .alert)
-                let continueAction = UIAlertAction(title: "Continue", style: .default, handler: nil)
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
-                    return
-                }
-                alertController.addAction(continueAction)
-                alertController.addAction(cancelAction)
+            let recipeTitle = titleTextField.text!
+            
+            if RecipeController.shared.savedRecipes.contains(where: { $0.name == recipeTitle }) && !isEditingRecipe {
+                
+                let alertController = UIAlertController(title: "Oops", message: "You cannot have two recipes with the same name. Note that \"your\" recipes include recipes you have liked.", preferredStyle: .alert)
+                
+                let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+                
+                alertController.addAction(dismissAction)
                 present(alertController, animated: true, completion: nil)
-            }
-            
-            let email = UserController.shared.user?.email ?? ""
-            
-            let recipe = Recipe(name: titleTextField.text!, image: recipeImage!, cookTime: Recipe.CookTime(rawValue: cookingTimeLabel.text!)!, cookingDifficulty: Recipe.Difficulty(rawValue: difficultyLabel.text!)!, category: Recipe.Category(rawValue: categoryLabel.text!)!, description: descriptionTextView.text!, ingredients: ingredients, steps: steps, author: email)
-            
-            if UserController.shared.userIsLoggedIn {
-                    RecipeController.shared.sendRecipe(recipe: recipe)
             } else {
-                RecipeController.shared.processRecipeIfUserIsNone(recipe: recipe)
+                let email = UserController.shared.user?.email ?? "thisDevice"
+                
+                let recipe = Recipe(name: titleTextField.text!, image: recipeImage!, cookTime: Recipe.CookTime(rawValue: cookingTimeLabel.text!)!, cookingDifficulty: Recipe.Difficulty(rawValue: difficultyLabel.text!)!, category: Recipe.Category(rawValue: categoryLabel.text!)!, description: descriptionTextView.text!, ingredients: ingredients, steps: steps, author: email)
+                
+                if UserController.shared.userIsLoggedIn {
+                    if isEditingRecipe {
+                        
+                        guard let recipeBeingEdited = recipeBeingEdited else { return }
+                        
+                        RecipeController.shared.delete(recipe: recipeBeingEdited)
+                        RecipeController.shared.deleteRecipeFromServer(recipe: recipeBeingEdited) { (_) in
+                            RecipeController.shared.sendRecipe(recipe: recipe, completion: {
+                                // Pop to root once sendRecipe() has been called
+                                self.backToPreviousViewController()
+                            })
+                            
+                            
+                        }
+                    } else {
+                        RecipeController.shared.sendRecipe(recipe: recipe) {
+                            self.backToPreviousViewController()
+                        }
+                        
+                    }
+                } else {
+                    if isEditingRecipe {
+                        guard let recipeBeingEdited = recipeBeingEdited else { return }
+                        
+                        RecipeController.shared.delete(recipe: recipeBeingEdited)
+                    }
+                    RecipeController.shared.processRecipeIfUserIsNone(recipe: recipe)
+                    backToPreviousViewController()
+                }
             }
+        }
+    }
+    
+    func backToPreviousViewController() {
+        // If the user edited the recipe, pop back to the root view controller on the navigation stack
+        if isEditingRecipe {
+            self.navigationController?.popToRootViewController(animated: true)
+        } else {
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -365,5 +440,19 @@ class AddRecipeTableViewController: UITableViewController, UIPickerViewDelegate,
         if keys.contains("recipeImage") { recipeImage = (recipeDict["recipeImage"] as! UIImage) }
         if keys.contains("ingredients") { ingredients = (recipeDict["ingredients"] as! [String]) }
         if keys.contains("steps") { steps = (recipeDict["steps"] as! [String]) }
+    }
+    
+    func setupRecipeEditing() {
+        guard let recipe = recipeBeingEdited else { return }
+        
+        recipeImageView.image = recipe.image
+        recipeImage = recipe.image
+        titleTextField.text = recipe.name
+        descriptionTextView.text = recipe.description
+        categoryLabel.text = recipe.category.rawValue
+        cookingTimeLabel.text = recipe.cookTime.rawValue
+        difficultyLabel.text = recipe.cookingDifficulty.rawValue
+        ingredients = recipe.ingredients
+        steps = recipe.steps
     }
 }

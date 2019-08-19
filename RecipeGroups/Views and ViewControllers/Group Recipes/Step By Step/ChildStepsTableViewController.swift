@@ -20,6 +20,11 @@ class ChildStepsTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 44
     }
     
+    override func viewDidLayoutSubviews() {
+        // Set the viewController's preferredContentSize based on the intrinsicContentSize of the tableView
+        self.preferredContentSize = self.tableView.intrinsicContentSize
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return steps.count
     }

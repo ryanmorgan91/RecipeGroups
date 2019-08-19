@@ -23,7 +23,7 @@ final class Recipe: Codable {
     var author: String
     var isLiked: Bool?
     var wasUploaded: Bool?
-    var localImageURL: URL?
+    var localImageName: String?
     
     enum Difficulty: String, CaseIterable, Codable {
         case easy = "Easy"
@@ -90,7 +90,7 @@ final class Recipe: Codable {
         case author
         case isLiked
         case wasUploaded
-        case localImageURL
+        case localImageName
     }
     
     init(from decoder: Decoder) throws {
@@ -108,7 +108,7 @@ final class Recipe: Codable {
         self.isLiked = try? container.decode(Bool.self, forKey: CodingKeys.isLiked)
         self.wasUploaded = try? container.decode(Bool.self, forKey: CodingKeys.wasUploaded)
         
-        self.localImageURL = try? container.decode(URL.self, forKey: CodingKeys.localImageURL)
+        self.localImageName = try? container.decode(String.self, forKey: CodingKeys.localImageName)
     }
     
     init(name: String, image: UIImage, cookTime: CookTime, cookingDifficulty: Difficulty, category: Category, description: String, ingredients: [String], steps: [String], author: String) {

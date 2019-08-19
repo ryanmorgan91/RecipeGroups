@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9D1F2EE0229778D7001AC220 /* GroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D1F2EDF229778D7001AC220 /* GroupController.swift */; };
-		9D37142022C0ABBA002EE7ED /* ImageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D37141F22C0ABBA002EE7ED /* ImageWrapper.swift */; };
+		9D36DDCB2308F61B00AB93EC /* SelfSizingTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D36DDCA2308F61B00AB93EC /* SelfSizingTableView.swift */; };
 		9D4BBCAD228A10480036488C /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4BBCAC228A10480036488C /* CustomStyles.swift */; };
 		9D540D092288EFD00090B7D2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D540D082288EFD00090B7D2 /* AppDelegate.swift */; };
 		9D540D0E2288EFD00090B7D2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D540D0C2288EFD00090B7D2 /* Main.storyboard */; };
@@ -67,7 +67,7 @@
 
 /* Begin PBXFileReference section */
 		9D1F2EDF229778D7001AC220 /* GroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupController.swift; sourceTree = "<group>"; };
-		9D37141F22C0ABBA002EE7ED /* ImageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageWrapper.swift; sourceTree = "<group>"; };
+		9D36DDCA2308F61B00AB93EC /* SelfSizingTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelfSizingTableView.swift; path = "RecipeGroups/Views and ViewControllers/Group Recipes/SelfSizingTableView.swift"; sourceTree = SOURCE_ROOT; };
 		9D4BBCAC228A10480036488C /* CustomStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStyles.swift; sourceTree = "<group>"; };
 		9D540D052288EFD00090B7D2 /* RecipeGroups.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeGroups.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D540D082288EFD00090B7D2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -208,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				9DEE6E37228A77C800D1817B /* ChildIngredientsTableViewController.swift */,
+				9D36DDCA2308F61B00AB93EC /* SelfSizingTableView.swift */,
 				9DF6B3CC228EA9740089F954 /* IngredientsTableViewCell.swift */,
 			);
 			path = Ingredients;
@@ -248,7 +249,6 @@
 				9DF6B3C6228E32E80089F954 /* User.swift */,
 				9DEE6E2B228A222300D1817B /* RecipeController.swift */,
 				9D540D232288F4F20090B7D2 /* Recipe.swift */,
-				9D37141F22C0ABBA002EE7ED /* ImageWrapper.swift */,
 				9D866F5722A1EA9F00D783DA /* PDFCreator.swift */,
 				9DF6B3D2228F3D720089F954 /* Group.swift */,
 				9D1F2EDF229778D7001AC220 /* GroupController.swift */,
@@ -390,7 +390,6 @@
 				9DF6B3D3228F3D720089F954 /* Group.swift in Sources */,
 				9DF6B3C7228E32E80089F954 /* User.swift in Sources */,
 				9DCFD2AB2295060F002F4F7A /* AddStepsTableViewCell.swift in Sources */,
-				9D37142022C0ABBA002EE7ED /* ImageWrapper.swift in Sources */,
 				9DF6B3CD228EA9740089F954 /* IngredientsTableViewCell.swift in Sources */,
 				9DF6B3AF228CF44A0089F954 /* UserController.swift in Sources */,
 				9D540D112288EFD00090B7D2 /* RecipeGroups.xcdatamodeld in Sources */,
@@ -407,6 +406,7 @@
 				9DEE6E38228A77C800D1817B /* ChildIngredientsTableViewController.swift in Sources */,
 				9DF6B3D7228F410A0089F954 /* CellBackgroundView.swift in Sources */,
 				9DF6B3BE228D4E500089F954 /* MenuViewController.swift in Sources */,
+				9D36DDCB2308F61B00AB93EC /* SelfSizingTableView.swift in Sources */,
 				9DF6B3DB228F62AB0089F954 /* MyRecipesTableViewController.swift in Sources */,
 				9D540D242288F4F20090B7D2 /* Recipe.swift in Sources */,
 				9DF6B3CB228E8D960089F954 /* SideMenuDelegate.swift in Sources */,

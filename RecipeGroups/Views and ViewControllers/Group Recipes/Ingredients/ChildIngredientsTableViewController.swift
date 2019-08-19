@@ -14,9 +14,15 @@ class ChildIngredientsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupView()
     }
 
+    override func viewDidLayoutSubviews() {
+        // Set the viewController's preferredContentSize based on the intrinsicContentSize of the tableView
+        self.preferredContentSize = self.tableView.intrinsicContentSize
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
